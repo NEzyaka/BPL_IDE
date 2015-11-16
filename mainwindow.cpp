@@ -96,7 +96,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) //constructor
                                    "QMenuBar::item:pressed { background: rgb(245, 246, 248); }");
 
     backgroundBox->setStyleSheet("background: rgb(245, 246, 248)");
-
 }
 
 MainWindow::~MainWindow() //destructor
@@ -502,24 +501,52 @@ void MainWindow::setupHelpMenu() //setting up help-menu
 
 //methods
 
+void MainWindow::setupTheme() //theme
+{
+    editor->backColor = QColor(39, 50, 56);
+    editor->fontColor = QColor(73, 83, 93);
+
+    editor->setStyleSheet("CodeEditor { background: rgb(39, 50, 56); color: rgb(245, 246, 248);  border: none; selection-background-color: rgb(245, 246, 248); selection-color: rgb(39, 50, 56); }");
+
+    qApp->setStyleSheet("QScrollBar:vertical { background: rgb(39, 50, 56); border-top-right-radius: 4px; border-bottom-right-radius: 4px; width: 12px; margin: 0px; }"
+                        "QScrollBar::handle:vertical { background-color: rgb(73, 83, 93); border-radius: 3px; min-height: 20px; margin: 0px 2px 0px 2px; }"
+                        "QScrollBar::add-line:vertical { background: none; height: 0px; subcontrol-position: right; subcontrol-origin: margin; }"
+                        "QScrollBar::sub-line:vertical { background: none; height: 0px; subcontrol-position: left; subcontrol-origin: margin; }"
+                        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }"
+
+                        "QStatusBar { background: rgb(39, 50, 56); }"
+                        "QStatusBar::item { border: none; padding: 3px 3px 3px 3px; }"
+
+                        "QToolBar { background: rgb(245, 246, 248); border: none; }"
+                        "QToolBar::item { border: none; }"
+                        "QToolBar::item:hover { background: rgb(225, 226, 228); }"
+
+                        "QMenu { background-color: rgb(245, 246, 248); border: rgb(245, 246, 248); margin: 3px; }"
+                        "QMenu::item { background-color: transparent; padding: 3px 5px 5px 25px; border-radius: 2px; }"
+                        "QMenu::item:selected { background-color: rgb(225, 226, 228); color: rgb(39, 50, 56); }"
+                        "QMenu::separator { background: rgb(133, 143, 153); height: 1 px; }"
+                        "QMenu::icon:checked { background: rgb(200, 230, 201); }"
+                        //"QMenu::icon:unchecked { background: rgb(255, 205, 210); }"
+
+                        "QMenuBar { background-color: rgb(245, 246, 248); color: rgb(39, 50, 56); }"
+                        "QMenuBar::item { spacing: 5px; padding: 3px 5px; background: transparent; border-radius: 2px; }"
+                        "QMenuBar::item:selected { background: rgb(225, 226, 228); }"
+                        "QMenuBar::item:pressed { background: rgb(225, 226, 228); }");
+
+
+    writeSessionLog("Fitted dark theme");
+}
+
 bool MainWindow::fileSaved() //checking saving of file
 {
-    QFile* file = new QFile(fileName);
     bool* isSaved = new bool(false);
-    if (file->open(QFile::ReadOnly | QFile::Text))
+
+    if(readFromFile(fileName) == editor->toPlainText())
     {
-        if(file->readAll() == editor->toPlainText())
-            *isSaved = true;
+        *isSaved = true;
         writeSessionLog("Successful checking of saving " + fileName);
     }
-    else
-    {
-        writeSessionLog("Error of checking of saving " + fileName);
-        QMessageBox::critical(this, "BPL IDE", "Ошибка проверки сохранения файла!");
-    }
 
-    file->close();
-    delete file;
     return isSaved;
     delete isSaved;
 }
@@ -540,20 +567,12 @@ void MainWindow::writeLog() //appending global log
     }
     else
     {
-        QString* sessionLog;
-        QFile* sessionLogFromFile = new QFile("sessionLog.log");
-        if (sessionLogFromFile->open(QFile::ReadOnly | QFile::Text))
-            sessionLog = new QString(sessionLogFromFile->readAll());
-        sessionLogFromFile->close();
-        delete sessionLogFromFile;
-
         QTextStream* stream = new QTextStream(&*file);
-        *stream << "\n" << "Session " << currentTimeDate() << "\n" << *sessionLog;
+        *stream << "\n" << "Session witch ended at " << currentTimeDate() << "\n" << readFromFile("sessionLog.log");
         stream->flush();
         file->close();
         delete file;
         delete stream;
-        delete sessionLog;
     }
 }
 
@@ -605,14 +624,7 @@ void MainWindow::configsRead() //configs reading
             throw 1;
         else
         {
-            QString* compilerpath;
-
-            QFile* interpreterPathFromFile = new QFile("configs/compilerConfig.config");
-            if(interpreterPathFromFile->open(QFile::ReadOnly | QFile::Text))
-                compilerpath = new QString(interpreterPathFromFile->readAll());
-            interpreterPathFromFile->close();
-            delete interpreterPathFromFile;
-
+            QString* compilerpath = new QString (readFromFile("configs/compilerConfig.config"));
             QFileInfo* interpr = new QFileInfo(*compilerpath);
 
             if(*compilerpath == "" || !interpr->isExecutable())
@@ -676,21 +688,7 @@ void MainWindow::configsRead() //configs reading
             else compilerPath = *compilerpath;
             delete compilerpath;
 
-            QFile* file = new QFile("configs/compilerConfig.config");
-            if (!file->open(QIODevice::WriteOnly))
-            {
-                QMessageBox::critical(this, "BPL IDE", "Ошибка записи в конфигурационный файл!");
-                return;
-            }
-            else
-            {
-                QTextStream* stream = new QTextStream(&*file);
-                *stream << compilerPath;
-                stream->flush();
-                file->close();
-                delete file;
-                delete stream;
-            }
+            writeToFile("configs/compilerConfig.config", compilerPath);
         }
         interpreterPathFromFile->close();
         delete interpreterPathFromFile;
@@ -727,6 +725,33 @@ void MainWindow::configsRead() //configs reading
     }
 }
 
+QString MainWindow::readFromFile(QString filePath)
+{
+    QString data = "";
+
+    QFile* file = new QFile(filePath);
+    if(file->open(QFile::ReadOnly | QFile::Text))
+        data = file->readAll();
+    file->close();
+    delete file;
+
+    return data;
+}
+
+void MainWindow::writeToFile(QString filePath, QString data)
+{
+    QFile* file = new QFile(filePath);
+    if(file->open(QIODevice::WriteOnly))
+    {
+        QTextStream* stream = new QTextStream(&*file);
+        *stream << data;
+        stream->flush();
+        file->close();
+        delete file;
+        delete stream;
+    }
+}
+
 
 //slots
 
@@ -739,14 +764,10 @@ void MainWindow::open() //open
         if(editorSetuped == false)
             setupEditor();
 
-        QFile* file = new QFile(fileName);
-        if (file->open(QFile::ReadOnly | QFile::Text))
-            editor->setPlainText(file->readAll());
-        file->close();
-        delete file;
+        editor->setPlainText(readFromFile(fileName));
         fileIsOpen = true;
 
-        this->setWindowTitle(fileName + " - BPL IDE");
+        this->setWindowTitle(fileName + " - BPL IDE Pre-Release");
 
         writeSessionLog(fileName + " was successfully opened");
     }
@@ -754,24 +775,16 @@ void MainWindow::open() //open
 
 void MainWindow::save() //save
 {
-    if (fileName != "" && fileIsOpen == true)
+    if(fileName != "" && fileIsOpen == true)
     {
-        QFile* file = new QFile(fileName);
-        if (!file->open(QIODevice::WriteOnly))
+        writeToFile(fileName, editor->toPlainText());
+
+        if(fileSaved())
+            writeSessionLog(fileName + " was successfully saved");
+        else
         {
             QMessageBox::critical(this, "BPL IDE", "Файл не может быть сохранён!");
             writeSessionLog("Error of saving " + fileName);
-            return;
-        }
-        else
-        {
-            QTextStream* stream = new QTextStream(&*file);
-            *stream << editor->toPlainText();
-            stream->flush();
-            file->close();
-            delete file;
-            delete stream;
-            writeSessionLog(fileName + " was successfully saved");
         }
     }
 }
@@ -780,24 +793,16 @@ void MainWindow::saveAs() //save as
 {
     fileName = QFileDialog::getSaveFileName(this, "Сохранить файл", "", "Исходный код BPL (*.bpl)");
 
-    if (fileName != "")
+    if(fileName != "" && fileIsOpen == true)
     {
-        QFile* file = new QFile(fileName);
-        if (!file->open(QIODevice::WriteOnly))
+        writeToFile(fileName, editor->toPlainText());
+
+        if(fileSaved())
+            writeSessionLog(fileName + " was successfully saved");
+        else
         {
             QMessageBox::critical(this, "BPL IDE", "Файл не может быть сохранён!");
             writeSessionLog("Error of saving " + fileName);
-            return;
-        }
-        else
-        {
-            QTextStream* stream = new QTextStream(&*file);
-            *stream << editor->toPlainText();
-            stream->flush();
-            file->close();
-            delete file;
-            delete stream;
-            writeSessionLog(fileName + " was successfully saved");
         }
     }
 }
@@ -815,11 +820,7 @@ void MainWindow::compile() //interpreting
             delete arg;
             writeSessionLog(fileName + " was successfully interpreted");
 
-            QFile* file = new QFile("configs/compilerConfig.config");
-            if (file->open(QFile::ReadOnly | QFile::Text))
-                compilerPath = file->readAll();
-            file->close();
-            delete file;
+            compilerPath = readFromFile("configs/compilerConfig.config");
         }
         else
         {
@@ -835,8 +836,8 @@ void MainWindow::compile() //interpreting
 void MainWindow::about() //about
 {
     QMessageBox::about(this, "О программе",
-                       "<h1>BPL IDE Release</h1>"
-                       "<h2>Версия 1.0</h2>"
+                       "<h1>BPL IDE Pre-Release</h1>"
+                       "<h2>Сборка 2</h2>"
                        "<h3>Простая среда разработки для простого языка программирования</h3>"
                        "<p>Добро пожаловать в BPL IDE! Для работы с BPL не нужно никакого опыта в программировании, да-да, вы не ослышались, BPL IDE прекрасно подходит для новичков. Подробнее о BPL и функциях BPL IDE смотрите в спарвке (F1).</p>"
 
@@ -963,42 +964,6 @@ void MainWindow::chooseCompilerPath() //choose interpreter
     writeSessionLog("Choosed BPL Interpreter in " + compilerPath);
 }
 
-void MainWindow::setupTheme() //theme
-{
-    editor->backColor = QColor(39, 50, 56);
-    editor->fontColor = QColor(73, 83, 93);
-
-    editor->setStyleSheet("CodeEditor { background: rgb(39, 50, 56); color: rgb(245, 246, 248);  border: none; selection-background-color: rgb(245, 246, 248); selection-color: rgb(39, 50, 56); }");
-
-    qApp->setStyleSheet("QScrollBar:vertical { background: rgb(39, 50, 56); border-top-right-radius: 4px; border-bottom-right-radius: 4px; width: 12px; margin: 0px; }"
-                        "QScrollBar::handle:vertical { background-color: rgb(73, 83, 93); border-radius: 3px; min-height: 20px; margin: 0px 2px 0px 2px; }"
-                        "QScrollBar::add-line:vertical { background: none; height: 0px; subcontrol-position: right; subcontrol-origin: margin; }"
-                        "QScrollBar::sub-line:vertical { background: none; height: 0px; subcontrol-position: left; subcontrol-origin: margin; }"
-                        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }"
-
-                        "QStatusBar { background: rgb(39, 50, 56); }"
-                        "QStatusBar::item { border: none; padding: 3px 3px 3px 3px; }"
-
-                        "QToolBar { background: rgb(245, 246, 248); border: none; }"
-                        "QToolBar::item { border: none; }"
-                        "QToolBar::item:hover { background: rgb(225, 226, 228); }"
-
-                        "QMenu { background-color: rgb(245, 246, 248); border: rgb(245, 246, 248); margin: 3px; }"
-                        "QMenu::item { background-color: transparent; padding: 3px 5px 5px 25px; border-radius: 2px; }"
-                        "QMenu::item:selected { background-color: rgb(225, 226, 228); color: rgb(39, 50, 56); }"
-                        "QMenu::separator { background: rgb(133, 143, 153); height: 1 px; }"
-                        "QMenu::icon:checked { background: rgb(200, 230, 201); }"
-                        //"QMenu::icon:unchecked { background: rgb(255, 205, 210); }"
-
-                        "QMenuBar { background-color: rgb(245, 246, 248); color: rgb(39, 50, 56); }"
-                        "QMenuBar::item { spacing: 5px; padding: 3px 5px; background: transparent; border-radius: 2px; }"
-                        "QMenuBar::item:selected { background: rgb(225, 226, 228); }"
-                        "QMenuBar::item:pressed { background: rgb(225, 226, 228); }");
-
-
-    writeSessionLog("Fitted dark theme");
-}
-
 void MainWindow::comment() //line commenting
 {
     QTextCursor* tc = new QTextCursor(editor->textCursor());
@@ -1071,6 +1036,12 @@ void MainWindow::textChanged() //working with code
         tc->insertText("FONTCOLOR");
     else if(tc->selectedText() == "АЩТ" || tc->selectedText() == "FЩТ" || tc->selectedText() == "FOТ")
         tc->insertText("FON");
+    else if(tc->selectedText() == "ША" || tc->selectedText() == "IА")
+        tc->insertText("IF");
+    else if(tc->selectedText() == "УДЫУ" || tc->selectedText() == "EДЫУ" || tc->selectedText() == "ELЫУ" || tc->selectedText() == "ELSУ")
+        tc->insertText("ELSE");
+    else if(tc->selectedText() == "УТВША" || tc->selectedText() == "EТВША" || tc->selectedText() == "ENВША" || tc->selectedText() == "ENDША" || tc->selectedText() == "ENDIА")
+        tc->insertText("ENDIF");
 
     delete tc;
 

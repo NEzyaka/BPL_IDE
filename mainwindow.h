@@ -86,6 +86,8 @@ private:
     void setupFileBar();
     void setupEditBar();
     void setupInterprBar();
+    QString readFromFile(QString filePath);
+    void writeToFile(QString filePath, QString data);
 
     QToolBar* fileBar;
     QToolBar* editBar;

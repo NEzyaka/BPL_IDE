@@ -30,7 +30,7 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     operatorFormat.setForeground(QColor(21, 96, 189, 255)); //operators
     operatorFormat.setFontWeight(QFont::Bold);
     QStringList operatorPatterns;
-    operatorPatterns << "\\bSWAP\\b" << "\\bPRINTNUM\\b" << "\\bPRINT\\b" << "\\bPRINTVAR\\b" << "\\bDUMP\\b" << "\\bDUMPVAR\\b" << "\\bINPUTVAR\\b" << "\\bCLEARSCREEN\\b" << "\\bALERT\\b" << "\\bNEXTLINE\\b" << "\\bCOMMAND\\b" << "\\bFONTCOLOR\\b" << "\\+" << "\\-" << "\\*" << "\\/" << "\\=";
+    operatorPatterns << "\\bDELETE\\b" << "\\bSWAP\\b" << "\\bPRINTNUM\\b" << "\\bPRINT\\b" << "\\bPRINTVAR\\b" << "\\bDUMP\\b" << "\\bDUMPVAR\\b" << "\\bINPUTVAR\\b" << "\\bCLEARSCREEN\\b" << "\\bALERT\\b" << "\\bNEXTLINE\\b" << "\\bCOMMAND\\b" << "\\bFONTCOLOR\\b" << "\\+" << "\\-" << "\\*" << "\\/" << "\\=";
     foreach (const QString &pattern, operatorPatterns)
     {
         rule.pattern = QRegExp(pattern);
@@ -76,6 +76,18 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     {
         rule.pattern = QRegExp(pattern);
         rule.format = valueFormat;
+        highlightingRules.append(rule);
+    }
+
+    conditionsFormat.setForeground(QColor(29, 233, 182)); //conditions
+    conditionsFormat.setFontWeight(QFont::Bold);
+    QStringList conditionsPatterns;
+    conditionsPatterns << "\\bIF\\b" << "\\bELSE\\b" << "\\bENDIF\\b";
+
+    foreach (const QString &pattern, conditionsPatterns)
+    {
+        rule.pattern = QRegExp(pattern);
+        rule.format = conditionsFormat;
         highlightingRules.append(rule);
     }
 

@@ -47,6 +47,7 @@ private:
     QTextCharFormat multiLineCommentFormat;
     QTextCharFormat valueFormat;
     QTextCharFormat errorsFormat;
+    QTextCharFormat conditionsFormat;
 };
 
 #endif // HIGHLIGHTER_H
