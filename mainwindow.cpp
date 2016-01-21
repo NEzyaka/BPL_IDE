@@ -3,10 +3,10 @@
 ** Copyright (C) 2015 Nikita Mironov
 ** Contact: nekit2002mir@yandex.ru
 **
-** This file is part of BPL IDE source code.
-** BPL IDE is open-source cross-platform IDE for BPL programming language.
+** This file is part of Turnip Editor source code.
+** Turnip Editor is open-source cross-platform IDE for Turnip programming language.
 **
-** BPL IDE is free software: you can redistribute it and/or modify
+** Turnip Editor is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
@@ -17,13 +17,13 @@
 ** GNU General Public License for more details.
 **
 ** You should have received a copy of the GNU General Public License
-** along with BPL IDE. If not, see <http://www.gnu.org/licenses/>.
+** along with Turnip Editor. If not, see <http://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
 
 #include "mainwindow.h" //including header-file
 
-//including Qt classes
+//including libraries
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QMenu>
@@ -41,8 +41,7 @@
 #include <QDialog>
 #include <QTabWidget>
 #include <QTextCursor>
-
-#include <QDebug>
+#include <QTextBrowser>
 
 //including .xpm's
 #include "icons/about.xpm"
@@ -75,8 +74,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) //constructor
     setupLogo();
     setupStartMenu();
 
-    this->setWindowTitle("BPL IDE");
-    this->setWindowIcon(QPixmap(icon));
+    this->setWindowTitle("Turnip Editor 16.01 Preview");
+    this->setWindowIcon(QPixmap("logo.png"));
     this->setMinimumSize(480, 270);
     this->resize(800, 600);
 
@@ -85,15 +84,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) //constructor
                                  "QMenu::item:selected { background-color: rgb(225, 226, 228); color: rgb(39, 50, 56); }"
                                  "QMenu::separator { background: rgb(133, 143, 153); height: 1 px; }");
 
-    helpMenu->setStyleSheet("QMenu { background-color: rgb(245, 246, 248); border: rgb(245, 246, 248); margin: 3px; }"
-                            "QMenu::item { background-color: transparent; padding: 3px 5px 5px 25px; border-radius: 2px; }"
-                            "QMenu::item:selected { background-color: rgb(225, 226, 228); color: rgb(39, 50, 56); }"
-                            "QMenu::separator { background: rgb(133, 143, 153); height: 1 px; }");
+    helpMenu->setStyleSheet(startFileMenu->styleSheet());
 
     this->menuBar()->setStyleSheet("QMenuBar { background-color: rgb(245, 246, 248); color: rgb(39, 50, 56); }"
                                    "QMenuBar::item { spacing: 5px; padding: 3px 5px; background: transparent; border-radius: 2px; }"
                                    "QMenuBar::item:selected { background: rgb(225, 226, 228); }"
-                                   "QMenuBar::item:pressed { background: rgb(245, 246, 248); }");
+                                   "QMenuBar::item:pressed { background: rgb(225, 226, 228); }");
 
     backgroundBox->setStyleSheet("background: rgb(245, 246, 248)");
 }
@@ -110,7 +106,7 @@ MainWindow::~MainWindow() //destructor
 void MainWindow::setupLogo() //setting up logo
 {
     logoLabel = new QLabel(this);
-    logoLabel->setPixmap(QPixmap(backgroundXpm));
+    logoLabel->setPixmap(QPixmap("icons/background.png"));
 
     logoLayout = new QVBoxLayout();
     logoLayout->addStretch();
@@ -322,7 +318,7 @@ void MainWindow::setupEditor() //setting up editor
 
     font->setFamily("Consolas");
     font->setFixedPitch(true);
-    font->setPointSize(12);
+    font->setPointSize(11);
     editor->setFont(*font);
 
     highlighter = new Highlighter(editor->document());
@@ -503,38 +499,34 @@ void MainWindow::setupHelpMenu() //setting up help-menu
 
 void MainWindow::setupTheme() //theme
 {
-    editor->backColor = QColor(39, 50, 56);
-    editor->fontColor = QColor(73, 83, 93);
+    editor->backColor = QColor(43, 48, 59);
+    editor->fontColor = QColor(84, 96, 107);
 
-    editor->setStyleSheet("CodeEditor { background: rgb(39, 50, 56); color: rgb(245, 246, 248);  border: none; selection-background-color: rgb(245, 246, 248); selection-color: rgb(39, 50, 56); }");
+    editor->setStyleSheet("CodeEditor { background: rgb(43, 48, 59); color: rgb(192, 197, 206); border: none; selection-background-color: rgb(245, 246, 248); }"
+                          "QScrollBar:vertical { background: transparent; border-top-right-radius: 4px; border-bottom-right-radius: 4px; width: 12px; margin: 0px; }"
+                          "QScrollBar::handle:vertical { background-color: rgb(61, 70, 79); border-radius: 3px; min-height: 20px; margin: 0px 2px 0px 2px; }"
+                          "QScrollBar::add-line:vertical { background: none; height: 0px; subcontrol-position: right; subcontrol-origin: margin; }"
+                          "QScrollBar::sub-line:vertical { background: none; height: 0px; subcontrol-position: left; subcontrol-origin: margin; }"
+                          "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }");
 
-    qApp->setStyleSheet("QScrollBar:vertical { background: rgb(39, 50, 56); border-top-right-radius: 4px; border-bottom-right-radius: 4px; width: 12px; margin: 0px; }"
-                        "QScrollBar::handle:vertical { background-color: rgb(73, 83, 93); border-radius: 3px; min-height: 20px; margin: 0px 2px 0px 2px; }"
-                        "QScrollBar::add-line:vertical { background: none; height: 0px; subcontrol-position: right; subcontrol-origin: margin; }"
-                        "QScrollBar::sub-line:vertical { background: none; height: 0px; subcontrol-position: left; subcontrol-origin: margin; }"
-                        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }"
-
-                        "QStatusBar { background: rgb(39, 50, 56); }"
+    qApp->setStyleSheet("QStatusBar { background: rgb(43, 48, 59); }"
                         "QStatusBar::item { border: none; padding: 3px 3px 3px 3px; }"
 
                         "QToolBar { background: rgb(245, 246, 248); border: none; }"
                         "QToolBar::item { border: none; }"
-                        "QToolBar::item:hover { background: rgb(225, 226, 228); }"
 
                         "QMenu { background-color: rgb(245, 246, 248); border: rgb(245, 246, 248); margin: 3px; }"
                         "QMenu::item { background-color: transparent; padding: 3px 5px 5px 25px; border-radius: 2px; }"
                         "QMenu::item:selected { background-color: rgb(225, 226, 228); color: rgb(39, 50, 56); }"
                         "QMenu::separator { background: rgb(133, 143, 153); height: 1 px; }"
                         "QMenu::icon:checked { background: rgb(200, 230, 201); }"
-                        //"QMenu::icon:unchecked { background: rgb(255, 205, 210); }"
 
                         "QMenuBar { background-color: rgb(245, 246, 248); color: rgb(39, 50, 56); }"
                         "QMenuBar::item { spacing: 5px; padding: 3px 5px; background: transparent; border-radius: 2px; }"
                         "QMenuBar::item:selected { background: rgb(225, 226, 228); }"
                         "QMenuBar::item:pressed { background: rgb(225, 226, 228); }");
 
-
-    writeSessionLog("Fitted dark theme");
+    writeSessionLog("Fitted theme");
 }
 
 bool MainWindow::fileSaved() //checking saving of file
@@ -562,7 +554,7 @@ void MainWindow::writeLog() //appending global log
 
     if (!file->open(QIODevice::Append))
     {
-        QMessageBox::critical(this, "BPL IDE", "Ошибка записи в лог-файл!");
+        QMessageBox::critical(this, "Turnip Editor", "Ошибка записи в лог-файл!");
         return;
     }
     else
@@ -581,7 +573,7 @@ void MainWindow::writeSessionLog(QString message) //writing session-log
     QFile* file = new QFile("sessionLog.log");
     if (!file->open(QIODevice::Append))
     {
-        QMessageBox::critical(this, "BPL IDE", "Ошибка записи в лог-файл сессии!");
+        QMessageBox::critical(this, "Turnip Editor", "Ошибка записи в лог-файл сессии!");
         return;
     }
     else
@@ -600,7 +592,7 @@ void MainWindow::clearSessionLog() //cleaning session-log
     QFile* file = new QFile("sessionLog.log");
     if (!file->open(QIODevice::WriteOnly))
     {
-        QMessageBox::critical(this, "BPL IDE", "Ошибка записи в лог-файл сессии!");
+        QMessageBox::critical(this, "Turnip Editor", "Ошибка записи в лог-файл сессии!");
         return;
     }
     else
@@ -616,113 +608,89 @@ void MainWindow::clearSessionLog() //cleaning session-log
 
 void MainWindow::configsRead() //configs reading
 {
-    try
+    //reading interpreter path config
+    QFile* interpreterPathFromFile = new QFile("configs/compilerConfig.config");
+    if (!interpreterPathFromFile->open(QFile::ReadOnly | QFile::Text))
+        writeToFile("configs/compilerConfig.config", "");
+    else
     {
-        //reading interpreter path config
-        QFile* interpreterPathFromFile = new QFile("configs/compilerConfig.config");
-        if (!interpreterPathFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        else
-        {
-            QString* compilerpath = new QString (readFromFile("configs/compilerConfig.config"));
-            QFileInfo* interpr = new QFileInfo(*compilerpath);
+        QString* compilerpath = new QString (readFromFile("configs/compilerConfig.config"));
+        QFileInfo* interpr = new QFileInfo(*compilerpath);
 
-            if(*compilerpath == "" || !interpr->isExecutable())
+        if(*compilerpath == "" || !interpr->isExecutable())
+        {
+            delete interpr;
+            QFileInfo* autoInterpreter = new QFileInfo("bpl_interpreter.exe");
+            if(autoInterpreter->isExecutable())
             {
-                delete interpr;
-                QFileInfo* autoInterpreter = new QFileInfo("bpl_interpreter.exe");
-                if(autoInterpreter->isExecutable())
+                QMessageBox* autoDetecox = new QMessageBox;
+                autoDetecox->setText("<b>Turnip Editor автоматически обнаружил интерпретатор для Turnip<br>в " + QString(autoInterpreter->absolutePath()) + "</b>");
+                autoDetecox->setInformativeText("Вы хотите использовать этот интерпретатор?");
+                autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+                autoDetecox->setDefaultButton(QMessageBox::Yes);
+                int* ret = new int(autoDetecox->exec());
+                delete autoDetecox;
+                switch(*ret)
                 {
-                    QMessageBox* autoDetecox = new QMessageBox;
-                    autoDetecox->setText("<b>BPL IDE автоматически обнаружила интерпретатор для BPL<br>в " + QString(autoInterpreter->absolutePath()) + "</b>");
-                    autoDetecox->setInformativeText("Вы хотите использовать этот интерпретатор?");
-                    autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
-                    autoDetecox->setDefaultButton(QMessageBox::Yes);
-                    int* ret = new int(autoDetecox->exec());
-                    delete autoDetecox;
-                    switch(*ret)
-                    {
-                    case QMessageBox::Yes:
-                        compilerPath = autoInterpreter->absoluteFilePath();
-                        break;
-                    case QMessageBox::Cancel:
-                        chooseCompilerPath();
-                        break;
-                    }
-                    delete ret;
+                case QMessageBox::Yes:
+                    compilerPath = autoInterpreter->absoluteFilePath();
+                    break;
+                case QMessageBox::Cancel:
+                    chooseCompilerPath();
+                    break;
                 }
-                else
+                delete ret;
+            }
+            else
+            {
+                QString* searchpath = new QString("С:\\");
+                QDirIterator* iterator = new QDirIterator(*searchpath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
+                while(iterator->hasNext())
                 {
-                    QString* searchpath = new QString("С:\\");
-                    QDirIterator* iterator = new QDirIterator(*searchpath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
-                    while(iterator->hasNext())
+                    iterator->next();
+                    if(iterator->fileInfo().absoluteFilePath().contains("bpl_interpreter", Qt::CaseInsensitive))
                     {
-                        iterator->next();
-                        if(iterator->fileInfo().absoluteFilePath().contains("bpl_interpreter", Qt::CaseInsensitive))
+                        QMessageBox* autoDetecox = new QMessageBox;
+                        autoDetecox->setText("<b>Turnip Editor автоматически обнаружил интерпретатор для Turnip<br>в " + QString(iterator->fileInfo().absolutePath() + "</b>"));
+                        autoDetecox->setInformativeText("Вы хотите использовать этот интерпретатор?");
+                        autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+                        autoDetecox->setDefaultButton(QMessageBox::Yes);
+                        int* ret = new int(autoDetecox->exec());
+                        delete autoDetecox;
+                        switch(*ret)
                         {
-                            QMessageBox* autoDetecox = new QMessageBox;
-                            autoDetecox->setText("<b>BPL IDE автоматически обнаружила интерпретатор для BPL<br>в " + QString(iterator->fileInfo().absolutePath() + "</b>"));
-                            autoDetecox->setInformativeText("Вы хотите использовать этот интерпретатор?");
-                            autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
-                            autoDetecox->setDefaultButton(QMessageBox::Yes);
-                            int* ret = new int(autoDetecox->exec());
-                            delete autoDetecox;
-                            switch(*ret)
-                            {
-                            case QMessageBox::Yes:
-                                compilerPath = iterator->fileInfo().absoluteFilePath();
-                                break;
-                            case QMessageBox::Cancel:
-                                chooseCompilerPath();
-                                break;
-                            }
-                            delete ret;
+                        case QMessageBox::Yes:
+                            compilerPath = iterator->fileInfo().absoluteFilePath();
+                            break;
+                        case QMessageBox::Cancel:
+                            chooseCompilerPath();
                             break;
                         }
+                        delete ret;
+                        break;
                     }
-                    delete searchpath;
-                    delete iterator;
-                    delete autoInterpreter;
                 }
+                delete searchpath;
+                delete iterator;
+                delete autoInterpreter;
             }
-            else compilerPath = *compilerpath;
-            delete compilerpath;
-
-            writeToFile("configs/compilerConfig.config", compilerPath);
         }
-        interpreterPathFromFile->close();
-        delete interpreterPathFromFile;
+        else compilerPath = *compilerpath;
+        delete compilerpath;
 
-        //reading completer model
-        QFile* completerModelFromFile = new QFile("configs/completerModel.config");
-        if (!completerModelFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 2;
-        completerModelFromFile->close();
-        delete completerModelFromFile;
-
-        writeSessionLog("Configuration files were successfully readed");
+        writeToFile("configs/compilerConfig.config", compilerPath);
     }
-    catch(int errCode) //exceptions
-    {
-        QMessageBox::critical(this, "BPL IDE",  "Ошибка чтения конфигурационного файла!");
+    interpreterPathFromFile->close();
+    delete interpreterPathFromFile;
 
-        switch(errCode)
-        {
-        case 0:
-            writeSessionLog("Error of reading 'configs/themeConfig.config'");
-            break;
-        case 1:
-            writeSessionLog("Error of reading 'configs/compilerConfig.config'");
-            break;
-        case 2:
-            writeSessionLog("Error of reading 'configs/completerModel.config'");
-            break;
-        default:
-            writeSessionLog("Unknown exception!");
-        }
+    //reading completer model
+    QFile* completerModelFromFile = new QFile("configs/completerModel.config");
+    if (!completerModelFromFile->open(QFile::ReadOnly | QFile::Text))
+        writeToFile("configs/completerModel.config", "");
+    completerModelFromFile->close();
+    delete completerModelFromFile;
 
-        qApp->quit();
-    }
+    writeSessionLog("Configuration files were successfully readed");
 }
 
 QString MainWindow::readFromFile(QString filePath)
@@ -757,7 +725,7 @@ void MainWindow::writeToFile(QString filePath, QString data)
 
 void MainWindow::open() //open
 {
-    fileName = QFileDialog::getOpenFileName(this, "Открыть файл", "", "Исходный код BPL (*.bpl *.txt)");
+    fileName = QFileDialog::getOpenFileName(this, "Открыть файл", "", "Исходный код Turnip (*.trnp *.txt *.ext)");
 
     if(fileName != "")
     {
@@ -767,7 +735,7 @@ void MainWindow::open() //open
         editor->setPlainText(readFromFile(fileName));
         fileIsOpen = true;
 
-        this->setWindowTitle(fileName + " - BPL IDE Pre-Release");
+        this->setWindowTitle(fileName + " - Turnip Editor 16.01 Preview");
 
         writeSessionLog(fileName + " was successfully opened");
     }
@@ -783,7 +751,7 @@ void MainWindow::save() //save
             writeSessionLog(fileName + " was successfully saved");
         else
         {
-            QMessageBox::critical(this, "BPL IDE", "Файл не может быть сохранён!");
+            QMessageBox::critical(this, "Turnip Editor", "Файл не может быть сохранён!");
             writeSessionLog("Error of saving " + fileName);
         }
     }
@@ -791,7 +759,7 @@ void MainWindow::save() //save
 
 void MainWindow::saveAs() //save as
 {
-    fileName = QFileDialog::getSaveFileName(this, "Сохранить файл", "", "Исходный код BPL (*.bpl)");
+    fileName = QFileDialog::getSaveFileName(this, "Сохранить файл", "", "Исходный код Turnip (*.trnp *.txt *.ext");
 
     if(fileName != "" && fileIsOpen == true)
     {
@@ -801,7 +769,7 @@ void MainWindow::saveAs() //save as
             writeSessionLog(fileName + " was successfully saved");
         else
         {
-            QMessageBox::critical(this, "BPL IDE", "Файл не может быть сохранён!");
+            QMessageBox::critical(this, "Turnip Editor", "Файл не может быть сохранён!");
             writeSessionLog("Error of saving " + fileName);
         }
     }
@@ -824,37 +792,36 @@ void MainWindow::compile() //interpreting
         }
         else
         {
-            QMessageBox::critical(this, "BPL IDE", "Интерпретатор не найден или повреждён. Пожалуйста, выберите интерпретатор.");
+            QMessageBox::critical(this, "Turnip Editor", "Интерпретатор не найден или повреждён. Пожалуйста, выберите интерпретатор.");
             writeSessionLog("Error of interpreting " + fileName);
             chooseCompilerPath();
             compile();
         }
     }
-    else QMessageBox::critical(this, "BPL IDE", "Ошибка сохранения файла!");
+    else QMessageBox::critical(this, "Turnip Editor", "Ошибка сохранения файла!");
 }
 
 void MainWindow::about() //about
 {
     QMessageBox::about(this, "О программе",
-                       "<h1>BPL IDE Pre-Release</h1>"
-                       "<h2>Сборка 2</h2>"
+                       "<h1>Turnip Editor 16.01 Preview</h1>"
                        "<h3>Простая среда разработки для простого языка программирования</h3>"
-                       "<p>Добро пожаловать в BPL IDE! Для работы с BPL не нужно никакого опыта в программировании, да-да, вы не ослышались, BPL IDE прекрасно подходит для новичков. Подробнее о BPL и функциях BPL IDE смотрите в спарвке (F1).</p>"
+                       "<p>Добро пожаловать в Turnip Editor! Для работы с Turnip не нужно никакого опыта в программировании, да-да, вы не ослышались, Turnip Editor прекрасно подходит для новичков. Подробнее о Turnip и функциях Turnip Editor смотрите в спарвке (F1).</p>"
 
-                       "<p>BPL IDE - свободная программа: вы можете перераспространять ее и/или "
+                       "<p>Turnip Editor - свободная программа: вы можете перераспространять ее и/или "
                        "изменять ее на условиях Стандартной общественной лицензии GNU в том виде, "
                        "в каком она была опубликована Фондом свободного программного обеспечения; "
                        "либо версии 3 лицензии, либо (по вашему выбору) любой более поздней "
                        "версии. "
-                       "BPL IDE распространяется в надежде, что она будет полезной, "
+                       "Turnip Editor распространяется в надежде, что она будет полезной, "
                        "но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА "
                        "или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной "
                        "общественной лицензии GNU. "
                        "Вы должны были получить копию Стандартной общественной лицензии GNU "
                        "вместе с этой программой. Если это не так, см. <a href = 'http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>.</p>"
 
-                       "<p><b>Нашли баг, или просто хотите задать вопрос? Пишите <a href='mailto:nekit2002mir@yandex.ru?subject=Message to the BPL IDE developer' title='Message to the BPL IDE developer'>сюда</a>.</b></p>"
-                       "<p>Copyright (С) 2015 Никита Миронов.</p>");
+                       "<p><b>Нашли баг, или просто хотите задать вопрос? Пишите <a href='mailto:nekit2002mir@yandex.ru?subject=Message to the Turnip Editor developer' title='Message to the Turnip Editor developer'>сюда</a>.</b></p>"
+                       "<p>Copyright (С) 2015-2016 Никита Миронов.</p>");
 
     writeSessionLog("About shown");
 }
@@ -942,26 +909,11 @@ void MainWindow::chooseCompilerPath() //choose interpreter
 {
     if(editorSetuped == false)
         while(compilerPath == "")
-            compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "", "Интерпретатор BPL (*.exe)");
-    else compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "", "Интерпретатор BPL (*.exe)");
+            compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "", "Интерпретатор Turnip (*.exe)");
+    else compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "", "Интерпретатор Turnip (*.exe)");
 
-    QFile* file = new QFile("configs/compilerConfig.config");
-    if (!file->open(QIODevice::WriteOnly))
-    {
-        QMessageBox::critical(this, "BPL IDE", "Ошибка записи в конфигурационный файл!");
-        return;
-    }
-    else
-    {
-        QTextStream* stream = new QTextStream(&*file);
-        *stream << compilerPath;
-        stream->flush();
-        file->close();
-        delete file;
-        delete stream;
-    }
-
-    writeSessionLog("Choosed BPL Interpreter in " + compilerPath);
+    writeToFile("comfigs/compilerConfig.config", compilerPath);
+    writeSessionLog("Choosed Turnip Runner in " + compilerPath);
 }
 
 void MainWindow::comment() //line commenting
@@ -1046,93 +998,77 @@ void MainWindow::textChanged() //working with code
     delete tc;
 
     QTextCursor* lineAndColumn = new QTextCursor(editor->textCursor());
-    columnLine->setText("<font color = #49535d size = 4>Строка " + QString::number(lineAndColumn->blockNumber()+1) + ", Столбец " + QString::number(lineAndColumn->columnNumber()+1) + "</font>");
+    columnLine->setText("<font color = #4f5b66 size = 4>Строка " + QString::number(lineAndColumn->blockNumber()+1) + ", Столбец " + QString::number(lineAndColumn->columnNumber()+1) + "</font>");
     delete lineAndColumn;
 }
 
 void MainWindow::help() //help
 {
     QDialog* help = new QDialog(this);
+
+    help->setWindowTitle("Помощь по Turnip Editor");
+
     QTabWidget* parts = new QTabWidget(help);
+
     QWidget* startWidget = new QWidget(help);
     QWidget* operatorsWidget = new QWidget(help);
     QWidget* varsWidget = new QWidget(help);
+    QWidget* ifWidget = new QWidget(help);
+    QWidget* examplesWidget = new QWidget(help);
+
     QVBoxLayout* helpLayout = new QVBoxLayout(help);
     QVBoxLayout* startLayout = new QVBoxLayout(startWidget);
     QVBoxLayout* operatorsLayout = new QVBoxLayout(operatorsWidget);
     QVBoxLayout* varsLayout = new QVBoxLayout(varsWidget);
-    QLabel* startLabel = new QLabel(startWidget);
-    QLabel* operatorsLabel = new QLabel(operatorsWidget);
-    QLabel* varsLabel = new QLabel(varsWidget);
+    QVBoxLayout* ifLayout = new QVBoxLayout(ifWidget);
+    QVBoxLayout* examplesLayout = new QVBoxLayout(examplesWidget);
+
+    QTextBrowser* startLabel = new QTextBrowser(startWidget);
+    QTextBrowser* operatorsLabel = new QTextBrowser(operatorsWidget);
+    QTextBrowser* varsLabel = new QTextBrowser(varsWidget);
+    QTextBrowser* ifLabel = new QTextBrowser(ifWidget);
+    QTextBrowser* examplesLabel = new QTextBrowser(examplesWidget);
 
     startLayout->addWidget(startLabel);
-    startLayout->addStretch();
-    startLabel->setText("<h1>Добро пожаловать в BPL!</h1>"
-                        "<h3>BPL - это простой язык программирования для новичков,<br>которые впервые занимаются программированием</h3>"
-                        "<p>Для того, чтобы начать работу Вам нужно получить базовые навыки программирования на BPL<br>и ознакомиться с интерфейсом и полезными функциями BPL IDE.</p>"
-                        "<h3>Полезные функции BPL IDE:</h3>"
-                        "<p>- Автозаполнение;</p>"
-                        "<p>- Функция Anti-Cyrillic, котоая поправит Вас, если Вы начнёте печатать оператор на русской раскладке;</p>"
-                        "<p>- Автоматическое сохранение каждого изменения;</p>"
-                        "<p>- Автоматическая установка тёмной темы, когда на улице станет темнеть;</p>"
-                        "<p>- Подсветка синтаксиса для удобного редактирования кода.</p>"
-                        "<h3>То, чему вы научитесь с помощью этой справки:</h3>"
-                        "<p>- Писать программы на языке BPL;</p>"
-                        "<p>- Что такое оператор;</p>"
-                        "<p>- Что такое тип данных;</p>"
-                        "<p>- Как пишутся программы;</p>"
-                        "<p>- Что такое интерпретатор и что такое интерпретация.</p>");
+    startLabel->setHtml(readFromFile("configs/help/start.htm"));
     startWidget->setLayout(startLayout);
 
     operatorsLayout->addWidget(operatorsLabel);
-    operatorsLayout->addStretch();
-    operatorsLabel->setText("<h1>Операторы</h1>"
-                            "<h3>Оператор - это инструкция, команда, которую получает, обрабатывает<br>и выполняет специальная программа - интерпретатор.</h3>"
-                            "<h3>Интерпретатор - это специальная программа, которая выполняет команды,<br>которые поступают из кода.</h3>"
-                            "<p><b>Пока в языке BPL есть 6 операторов:</b>"
-                            "<font face = Consolas size = 4><font color = #1560bd><b><br>PRINT</b></font>;"
-                            "<font face = Consolas size = 4><font color = #1560bd><b><br>PRINTVAR</b></font>;"
-                            "<font face = Consolas size = 4><font color = #1560bd><b><br>DUMP</b></font>;"
-                            "<font face = Consolas size = 4><font color = #1560bd><b><br>DUMPVAR</b></font>;"
-                            "<font face = Consolas size = 4><font color = #1560bd><b><br>NEXTLINE</b></font>;"
-                            "<font face = Consolas size = 4><font color = #1560bd><b><br>COMMAND</b></font>;"
-                            "<font face = Consolas size = 4><font color = #1560bd><b><br>FONTCOLOR</b></font>;"
-                            "<font face = Consolas size = 4><font color = #1560bd><b><br>ALERT</b></font>.</p>"
-                            "<p>Возможно, Вы уже поняли, что делает каждый из представленных операторов,<br>но всё равно следует подробно разобрать каждый из них.</p>"
-                            "<p><b>Оператор PRINT</b> выводит строку после себя в консоль, например, оператор <font face = Consolas size = 4><font color = #1560bd><b><br>PRINT</b></font> <font color = #2d2d2d>Hello, world!</font></font> <br>выведет в консоль <font face = Consolas color = #2d2d2d>Hello, world!</font></p>"
-                            "<p><b>Оператор ALERT</b> издаёт предупредительный звуковой сигнал</p>"
-                            "<p><b>Оператор COMMAND</b> запускает командную строку с определёнными аргументами</p>"
-                            "<p><b>Оператор FONTCOLOR</b> устанавливает определённые цвет шрифта</p>"
-                            "<p><b>Оператор NEXTLINE</b> переводит строку на следующую, например, операторы <font face = Consolas size = 4><font color = #1560bd><b><br>PRINT</b></font> <font color = #2d2d2d>First Line</font> <font color = #1560bd><b><br>NEXTLINE</b></font> <font color = #1560bd><b><br>PRINT</b></font> <font color = #2d2d2d>Second line</font></font> <br>выведут в консоль<br><font face = Consolas color = #2d2d2d>First Line<br>Second Line</font></p>"
-                            "<p>Так как остальные операторы работают с переменными величинами, они будут описаны в разделе 'Типы данных'</p>");
+    operatorsLabel->setText(readFromFile("configs/help/operators.htm"));
     operatorsWidget->setLayout(operatorsLayout);
 
     varsLayout->addWidget(varsLabel);
-    varsLayout->addStretch();
-    varsLabel->setText("<h1>Типы данных, переменные величины</h1>"
-                       "<h4>Переменные - это ячейки в оперативной памяти компьютера, котрые хранят данные во время выполнения программ.</h4>"
-                       "<h4>Для удобства программистов у каждой переменной есть свой тип данных, который хранит в себе переменная<br>только определённый тип данных, например, строки.</h4>"
-                       "<p><b>Пока в языке BPL есть 3 типа данных:</b>"
-                       "<font face = Consolas size = 4><font color = #ffd800><b><br>INTEGER</b></font> (целые числа, например, <font face = Consolas color = #E75480 size = 4><b>12</b></font>);"
-                       "<font face = Consolas size = 4><font color = #ffd800><b><br>DOUBLE</b></font> (десятичные дроби, например, <font face = Consolas color = #E75480 size = 4><b>15.22</b></font>);"
-                       "<font face = Consolas size = 4><font color = #ffd800><b><br>LINE</b></font> (строки, например, Hello);"
-                       "<font face = Consolas size = 4><font color = #ffd800><b><br>BOOL</b></font> (логические значения, имеет только два значения: <font face = Consolas color = #E75480 size = 4><b>TRUE</b></font> и <font face = Consolas color = #E75480 size = 4><b>FALSE</b></font>, например, <font face = Consolas color = #E75480 size = 4><b>TRUE</b></font>).</p>"
-                       "<p><b>Так как переменная - это ячейка в памяти компьютера, у неё есть своё значение и размер, для того, чтобы узнать их,<br>в BPL есть специальные операторы для работы с переменными, их 3:</b>"
-                       "<font face = Consolas size = 4><font color = #1560bd><b><br>DUMP</b></font> (Вывод на экран информации о всех переменных: Номер переменной в алфавитном порядке -> Имя[тип, значение, размер]);"
-                       "<font face = Consolas size = 4><font color = #1560bd><b><br>DUMPVAR</b></font> (Вывод на экран информации о переменной: Имя[тип, значение, размер]);"
-                       "<font face = Consolas size = 4><font color = #1560bd><b><br>PRINTAVR</b></font> (Вывод на экран значения переменной);"
-                       "<font face = Consolas size = 4><font color = #1560bd><b><br>INPUTVAR</b></font> (Ввод значения пееменной с клавиатуры).</p>"
-                       "<p><h4>Давайте разберём пример работы с переменными. Например, нам нужно узнать имя пользователя и вывести 'Hello, *введённое имя пользователя*'<br>Для этого нам нужно: звести переменную строкового типа, считать её значение, вывести 'Hello, ' + значение переменной.<br>Должен получиться следующий код:</h4><font face = Consolas size = 4><font color = #ffd800><b>LINE</b></font> name<br><font color = #1560bd><b>INPUTVAR</b></font> name<br><font color = #1560bd><b>PRINT</b></font> Hello, <br><font color = #1560bd><b>PRINTVAR</b></font> name<br><font color = #1560bd><b>ENDPROGRAM</b></font></font></p>");
+    varsLabel->setText(readFromFile("configs/help/vars.htm"));
     varsWidget->setLayout(varsLayout);
+
+    ifLayout->addWidget(ifLabel);
+    ifLabel->setText(readFromFile("configs/help/if.htm"));
+    ifWidget->setLayout(ifLayout);
+
+    examplesLayout->addWidget(examplesLabel);
+    examplesLabel->setText(readFromFile("configs/help/examples.htm"));
+    examplesWidget->setLayout(examplesLayout);
 
     parts->addTab(startWidget, "&Начало");
     parts->addTab(operatorsWidget, "О&ператоры");
     parts->addTab(varsWidget, "Типы &данных");
+    parts->addTab(ifWidget, "&Условия");
+    parts->addTab(examplesWidget, "&Примеры");
+
     helpLayout->addWidget(parts);
     help->setLayout(helpLayout);
 
-    help->setStyleSheet("QTabWidget::tab-bar { alignment: center; }");
+    help->setStyleSheet("QTabWidget::tab-bar { alignment: center; }"
+                        "QTextBrowser { border: none; }"
 
+                        "QScrollBar:vertical { background: transparent; border-top-right-radius: 4px; border-bottom-right-radius: 4px; width: 12px; margin: 0px; }"
+                        "QScrollBar::handle:vertical { background-color: rgb(225, 226, 228); border-radius: 3px; min-height: 20px; margin: 0px 2px 0px 2px; }"
+                        "QScrollBar::add-line:vertical { background: none; height: 0px; subcontrol-position: right; subcontrol-origin: margin; }"
+                        "QScrollBar::sub-line:vertical { background: none; height: 0px; subcontrol-position: left; subcontrol-origin: margin; }"
+                        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }");
+
+    help->resize(750, 500);
+    help->setMinimumSize(750, 500);
     help->show();
 
     if(help->exec() == 0)
@@ -1140,16 +1076,22 @@ void MainWindow::help() //help
         delete startLabel;
         delete operatorsLabel;
         delete varsLabel;
+        delete ifLabel;
+
         delete startLayout;
         delete operatorsLayout;
         delete varsLayout;
+        delete ifLayout;
+
         delete startWidget;
         delete operatorsWidget;
         delete varsWidget;
+        delete ifWidget;
+
         delete parts;
         delete helpLayout;
         delete help;
     }
 
-    writeSessionLog("Shown help(F1)");
+    writeSessionLog("Shown help");
 }

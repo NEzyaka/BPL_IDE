@@ -48,6 +48,9 @@ private:
     QTextCharFormat valueFormat;
     QTextCharFormat errorsFormat;
     QTextCharFormat conditionsFormat;
+    QTextCharFormat cyclesFormat;
+    QTextCharFormat quotationFormat;
+    QTextCharFormat blocksFormat;
 };
 
 #endif // HIGHLIGHTER_H

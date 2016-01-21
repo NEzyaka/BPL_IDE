@@ -1,9 +1,12 @@
-# BPL IDE
-Open-source cross-platform IDE for BPL
+# Turnip Editor
+Open-source, cross-platform IDE for Turnip
 
-<h3>Pre-Release Build 2</h3>
+BPL IDE has been renamed to Turnip Editor, because BPL has been renamed to Turnip
+
+<h3>16.01 Preview</h3>
 
 What's new:
-- Improved reading from file;
-- Added support of BPL Interpreter Beta 3 Build 5;
-- Optimization of resource consumption.
+- Added support of BPL Interpreter 16.01 Preview;
+- Improved documentation, now it's more understandable, than earlier;
+- Improved syntax highlighting, now colors are nicer;
+- Removed user-themes.

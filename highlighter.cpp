@@ -27,28 +27,41 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
 {
     HighlightingRule rule;
 
-    operatorFormat.setForeground(QColor(21, 96, 189, 255)); //operators
+    //operators
+    operatorFormat.setForeground(QColor(63, 81, 181));
     operatorFormat.setFontWeight(QFont::Bold);
     QStringList operatorPatterns;
-    operatorPatterns << "\\bDELETE\\b" << "\\bSWAP\\b" << "\\bPRINTNUM\\b" << "\\bPRINT\\b" << "\\bPRINTVAR\\b" << "\\bDUMP\\b" << "\\bDUMPVAR\\b" << "\\bINPUTVAR\\b" << "\\bCLEARSCREEN\\b" << "\\bALERT\\b" << "\\bNEXTLINE\\b" << "\\bCOMMAND\\b" << "\\bFONTCOLOR\\b" << "\\+" << "\\-" << "\\*" << "\\/" << "\\=";
-    foreach (const QString &pattern, operatorPatterns)
+    operatorPatterns << "\\bSIZE\\b" << "\\bSETVAL\\b" << "\\bDELETE\\b"
+                     << "\\bSWAP\\b" << "\\bPRINT\\b" << "\\bDUMP\\b"
+                     << "\\bDUMPVAR\\b" << "\\bINPUTVAR\\b" << "\\bCLEARSCREEN\\b"
+                     << "\\bALERT\\b" << "\\bNEXTLINE\\b" << "\\bCOMMAND\\b"
+                     << "\\bFONTCOLOR\\b" << "\\bDOBLOCK\\b" << "\\bIMPORT\\b"
+                     << "\\bBLOCKLIST\\b" << "\\bADD\\b" << "\\bSUBTRACT\\b" << "\\bMULTIPLY\\b" << "\\bDIVISE\\b" << "\\W+\\W" << "\\-" << "\\*" << "\\/" << "\\=";
+    foreach(const QString &pattern, operatorPatterns)
     {
         rule.pattern = QRegExp(pattern);
         rule.format = operatorFormat;
         highlightingRules.append(rule);
     }
 
-    singleLineCommentFormat.setForeground(QColor(80, 200, 120, 255)); //single-line comment
+    //single-line comment
+    singleLineCommentFormat.setForeground(QColor(4, 147, 114));
+    singleLineCommentFormat.setFontWeight(QFont::Bold);
+    singleLineCommentFormat.setFontItalic(true);
     rule.pattern = QRegExp("//[^\n]*");
     rule.format = singleLineCommentFormat;
     highlightingRules.append(rule);
 
-    multiLineCommentFormat.setForeground(QColor(80, 200, 120, 255));
+    multiLineCommentFormat.setForeground(QColor(42, 187, 155));
+    multiLineCommentFormat.setFontWeight(QFont::Bold);
+    multiLineCommentFormat.setFontItalic(true);
 
-    variableFormat.setForeground(QColor(255, 216, 0)); //data types
+    //data types
+    variableFormat.setForeground(QColor(245, 215, 110));
     variableFormat.setFontWeight(QFont::Bold);
     QStringList variablePatterns;
-    variablePatterns << "\\bLINE\\b" << "\\bINTEGER\\b" << "\\bBOOL\\b" << "\\bDOUBLE\\b";
+    variablePatterns << "\\bLINE\\b" << "\\bINTEGER\\b"
+                     << "\\bBOOL\\b" << "\\bDOUBLE\\b";
     foreach (const QString &pattern, variablePatterns)
     {
         rule.pattern = QRegExp(pattern);
@@ -56,52 +69,103 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
         highlightingRules.append(rule);
     }
 
-    errorsFormat.setBackground(QColor(255, 10, 0)); //errors
+    //errors
+    errorsFormat.setBackground(QColor(255, 10, 0));
     errorsFormat.setFontWeight(QFont::Bold);
     QStringList errorsPatterns;
     errorsPatterns << "\\bprint\\b";
 
-    foreach (const QString &pattern, errorsPatterns)
+    foreach(const QString &pattern, errorsPatterns)
     {
         rule.pattern = QRegExp(pattern);
         rule.format = errorsFormat;
         highlightingRules.append(rule);
     }
 
-    valueFormat.setForeground(QColor(231, 84, 128)); //values
+    //values
+    valueFormat.setForeground(QColor(241, 169, 160));
     valueFormat.setFontWeight(QFont::Bold);
+    valueFormat.setFontItalic(true);
     QStringList valuePatterns;
-    valuePatterns << "\\bLIGHTGREEN\\b" << "\\bLIGHTWHITE\\b" << "\\bLIGHTPURPLE\\b" << "\\bLIGHTYELLOW\\b" << "\\bLIGHTRED\\b" << "\\bLIGHTBLUE\\b" << "\\blightgreen\\b" << "\\blightwhite\\b" << "\\blightpurple\\b" << "\\blightyellow\\b" << "\\blightred\\b" << "\\blightblue\\b" << "\\blightgray\\b" << "\\bgray\\b" << "\\bwhite\\b" << "\\byellow\\b" << "\\bpurple\\b" << "\\bred\\b" << "\\bcyan\\b" << "\\bgreen\\b" << "\\bblack\\b" << "\\bblue\\b" << "\\bLIGHTGRAY\\b" << "\\bGRAY\\b" << "\\bWHITE\\b" << "\\bYELLOW\\b" << "\\bPURPLE\\b" << "\\bRED\\b" << "\\bCYAN\\b" << "\\bGREEN\\b" << "\\bBLACK\\b" << "\\bBLUE\\b" << "\\btrue\\b" << "\\bfalse\\b" << "\\bTRUE\\b" << "\\bFALSE\\b" << "1" << "2" << "3" << "4" << "5" << "6" << "7" << "8" << "9" << "0";
-    foreach (const QString &pattern, valuePatterns)
+    valuePatterns << "\\bLIGHTGREEN\\b" << "\\bLIGHTWHITE\\b" << "\\bLIGHTPURPLE\\b"
+                  << "\\bLIGHTYELLOW\\b" << "\\bLIGHTRED\\b" << "\\bLIGHTBLUE\\b"
+                  << "\\blightgreen\\b" << "\\blightwhite\\b" << "\\blightpurple\\b"
+                  << "\\blightyellow\\b" << "\\blightred\\b" << "\\blightblue\\b"
+                  << "\\blightgray\\b" << "\\bgray\\b" << "\\bwhite\\b"
+                  << "\\byellow\\b" << "\\bpurple\\b" << "\\bred\\b"
+                  << "\\bcyan\\b" << "\\bgreen\\b" << "\\bblack\\b"
+                  << "\\bblue\\b" << "\\bLIGHTGRAY\\b" << "\\bGRAY\\b"
+                  << "\\bWHITE\\b" << "\\bYELLOW\\b" << "\\bPURPLE\\b"
+                  << "\\bRED\\b" << "\\bCYAN\\b" << "\\bGREEN\\b"
+                  << "\\bBLACK\\b" << "\\bBLUE\\b" << "\\btrue\\b"
+                  << "\\bfalse\\b" << "\\bTRUE\\b" << "\\bFALSE\\b"
+                  << "\\bMAIN\\b" << "1" << "2" << "3" << "4" << "5" << "6" << "7" << "8" << "9" << "0";
+    foreach(const QString &pattern, valuePatterns)
     {
         rule.pattern = QRegExp(pattern);
         rule.format = valueFormat;
         highlightingRules.append(rule);
     }
 
-    conditionsFormat.setForeground(QColor(29, 233, 182)); //conditions
+    //conditions
+    conditionsFormat.setForeground(QColor(54, 215, 183));
     conditionsFormat.setFontWeight(QFont::Bold);
     QStringList conditionsPatterns;
     conditionsPatterns << "\\bIF\\b" << "\\bELSE\\b" << "\\bENDIF\\b";
 
-    foreach (const QString &pattern, conditionsPatterns)
+    foreach(const QString &pattern, conditionsPatterns)
     {
         rule.pattern = QRegExp(pattern);
         rule.format = conditionsFormat;
         highlightingRules.append(rule);
     }
 
-    commentStartExpression = QRegExp("/\\*"); //multi-line comment
+    //conditions
+    cyclesFormat.setForeground(QColor(145, 61, 136));
+    cyclesFormat.setFontWeight(QFont::Bold);
+    QStringList cyclesPatterns;
+    cyclesPatterns << "\\bFOR\\b" << "\\bENDFOR\\b";
+
+    foreach(const QString &pattern, cyclesPatterns)
+    {
+        rule.pattern = QRegExp(pattern);
+        rule.format = cyclesFormat;
+        highlightingRules.append(rule);
+    }
+
+    //blocks
+    blocksFormat.setForeground(QColor(235, 149, 50));
+    blocksFormat.setFontWeight(QFont::Bold);
+    QStringList blocksPatterns;
+    blocksPatterns << "\\bBEGINBLOCK\\b" << "\\bENDBLOCK\\b";
+
+    foreach(const QString &pattern, blocksPatterns)
+    {
+        rule.pattern = QRegExp(pattern);
+        rule.format = blocksFormat;
+        highlightingRules.append(rule);
+    }
+
+    //multi-line comment
+    commentStartExpression = QRegExp("/\\*");
     commentEndExpression = QRegExp("\\*/");
+
+    //lines
+    quotationFormat.setForeground(QColor(174, 168, 211));
+    quotationFormat.setFontWeight(QFont::Bold);
+    quotationFormat.setFontItalic(true);
+    rule.pattern = QRegExp("\".*\"");
+    rule.format = quotationFormat;
+    highlightingRules.append(rule);
 }
 
 void Highlighter::highlightBlock(const QString &text) //syntax highlighting
 {
-    foreach (const HighlightingRule &rule, highlightingRules)
+    foreach(const HighlightingRule &rule, highlightingRules)
     {
         QRegExp expression(rule.pattern);
         int index = expression.indexIn(text);
-        while (index >= 0)
+        while(index >= 0)
         {
             int length = expression.matchedLength();
             setFormat(index, length, rule.format);
@@ -112,15 +176,15 @@ void Highlighter::highlightBlock(const QString &text) //syntax highlighting
     setCurrentBlockState(0);
 
     int startIndex = 0;
-    if (previousBlockState() != 1)
+    if(previousBlockState() != 1)
         startIndex = commentStartExpression.indexIn(text);
 
 
-    while (startIndex >= 0)
+    while(startIndex >= 0)
     {
         int endIndex = commentEndExpression.indexIn(text, startIndex);
         int commentLength;
-        if (endIndex == -1)
+        if(endIndex == -1)
         {
             setCurrentBlockState(1);
             commentLength = text.length() - startIndex;
