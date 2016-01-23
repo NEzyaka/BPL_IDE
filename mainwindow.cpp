@@ -21,7 +21,7 @@
 **
 ****************************************************************************/
 
-#include "mainwindow.h" //including header-file
+#include "mainwindow.h"
 
 //including libraries
 #include <QMessageBox>
@@ -43,29 +43,7 @@
 #include <QTextCursor>
 #include <QTextBrowser>
 
-//including .xpm's
-#include "icons/about.xpm"
-#include "icons/background.xpm"
-#include "icons/comment.xpm"
-#include "icons/compile.xpm"
-#include "icons/compiler.xpm"
-#include "icons/copy.xpm"
-#include "icons/cut.xpm"
-#include "icons/exit.xpm"
-#include "icons/fullscreen.xpm"
-#include "icons/help.xpm"
-#include "icons/logo.xpm"
-#include "icons/move.xpm"
-#include "icons/open.xpm"
-#include "icons/paste.xpm"
-#include "icons/qt.xpm"
-#include "icons/redo.xpm"
-#include "icons/save.xpm"
-#include "icons/saveAs.xpm"
-#include "icons/undo.xpm"
-#include "icons/view.xpm"
-
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) //constructor
+MainWindow::MainWindow() //constructor
 {
     clearSessionLog();
     writeSessionLog("Session started");
@@ -74,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) //constructor
     setupLogo();
     setupStartMenu();
 
-    this->setWindowTitle("Turnip Editor 16.01 Preview");
+    this->setWindowTitle("Turnip Editor 16.01");
     this->setWindowIcon(QPixmap("logo.png"));
     this->setMinimumSize(480, 270);
     this->resize(800, 600);
@@ -277,23 +255,23 @@ void MainWindow::setupActions() //setting up actions
     commentAction->setText("Закомментирвоать строку");
     helpAction->setText("Справка");
 
-    openAction->setIcon(QPixmap(openXpm)); //setting up icons
-    saveAction->setIcon(QPixmap(saveXpm));
-    saveAsAction->setIcon(QPixmap(saveAsXpm));
-    exitAction->setIcon(QPixmap(exitXpm));
-    undoAction->setIcon(QPixmap(undoXpm));
-    redoAction->setIcon(QPixmap(redoXpm));
-    cutAction->setIcon(QPixmap(cutXpm));
-    copyAction->setIcon(QPixmap(copyXpm));
-    pasteAction->setIcon(QPixmap(pasteXpm));
-    compileAction->setIcon(QPixmap(compileXpm));
-    aboutAction->setIcon(QPixmap(aboutXpm));
-    aboutQtAction->setIcon(QPixmap(qt));
-    fullscrAction->setIcon(QPixmap(fullscreen));
-    moveToolbarsAction->setIcon(QPixmap(moveXpm));
-    chooseCompilerPathAction->setIcon(QPixmap(compPath));
-    commentAction->setIcon(QPixmap(commentXpm));
-    helpAction->setIcon(QPixmap(helpXpm));
+    openAction->setIcon(QPixmap("icons/open.png")); //setting up icons
+    saveAction->setIcon(QPixmap("icons/save.png"));
+    saveAsAction->setIcon(QPixmap("icons/saveAs.png"));
+    exitAction->setIcon(QPixmap("icons/exit.png"));
+    undoAction->setIcon(QPixmap("icons/undo.png"));
+    redoAction->setIcon(QPixmap("icons/redo.png"));
+    cutAction->setIcon(QPixmap("icons/cut.png"));
+    copyAction->setIcon(QPixmap("icons/copy.png"));
+    pasteAction->setIcon(QPixmap("icons/paste.png"));
+    compileAction->setIcon(QPixmap("icons/compile.png"));
+    aboutAction->setIcon(QPixmap("icons/about.png"));
+    aboutQtAction->setIcon(QPixmap("icons/qt.png"));
+    fullscrAction->setIcon(QPixmap("icons/fullscreen.png"));
+    moveToolbarsAction->setIcon(QPixmap("icons/move.png"));
+    chooseCompilerPathAction->setIcon(QPixmap("icons/compiler.png"));
+    commentAction->setIcon(QPixmap("icons/comment.png"));
+    helpAction->setIcon(QPixmap("icons/help.png"));
 
     fullscrAction->setCheckable(true); //setting up checkability
     moveToolbarsAction->setCheckable(true);
@@ -326,9 +304,9 @@ void MainWindow::setupEditor() //setting up editor
     setupToolbar();
     setupFullMenu();
 
-    openAction->setIcon(QPixmap(openXpm)); //setting up icons
-    saveAction->setIcon(QPixmap(saveXpm));
-    saveAsAction->setIcon(QPixmap(saveAsXpm));
+    openAction->setIcon(QPixmap("icons/open.png")); //setting up icons
+    saveAction->setIcon(QPixmap("icons/save.png"));
+    saveAsAction->setIcon(QPixmap("icons/saveAs.png"));
 
     this->setCentralWidget(editor);
 
@@ -452,7 +430,7 @@ void MainWindow::setupSettingsMenu() //setting up start settings-menu
     settingsMenu->setTitle("&Настройки");
     environmentMenu->setTitle("Среда");
 
-    environmentMenu->setIcon(QPixmap(view));
+    environmentMenu->setIcon(QPixmap("icons/view.png"));
     environmentMenu->addAction(fullscrAction);
     environmentMenu->addAction(moveToolbarsAction);
 
@@ -783,12 +761,12 @@ void MainWindow::compile() //interpreting
     {
         if(!compilerPath.isEmpty())
         {
-            QString* arg = new QString(compilerPath.append(" " + fileName));
+            QString* bufPath = new QString(compilerPath);
+            QString* arg = new QString(bufPath->append(" " + fileName));
+            delete bufPath;
             system(arg->toStdString().c_str());
             delete arg;
             writeSessionLog(fileName + " was successfully interpreted");
-
-            compilerPath = readFromFile("configs/compilerConfig.config");
         }
         else
         {
@@ -912,7 +890,7 @@ void MainWindow::chooseCompilerPath() //choose interpreter
             compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "", "Интерпретатор Turnip (*.exe)");
     else compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "", "Интерпретатор Turnip (*.exe)");
 
-    writeToFile("comfigs/compilerConfig.config", compilerPath);
+    writeToFile("configs/compilerConfig.config", compilerPath);
     writeSessionLog("Choosed Turnip Runner in " + compilerPath);
 }
 

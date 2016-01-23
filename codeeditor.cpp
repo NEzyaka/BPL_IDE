@@ -26,13 +26,6 @@
 #include "codeeditor.h"
 #include "mainwindow.h"
 
-#include "icons/copy.xpm"
-#include "icons/redo.xpm"
-#include "icons/undo.xpm"
-#include "icons/paste.xpm"
-#include "icons/cut.xpm"
-#include "icons/comment.xpm"
-
 #include <QtGui>
 #include <QRect>
 
@@ -84,12 +77,12 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *e) //setting up context men
     copyAction->setShortcut(Qt::CTRL + Qt::Key_C);
     pasteAction->setShortcut(Qt::CTRL + Qt::Key_V);
 
-    undoAction->setIcon(QPixmap(undoXpm));
-    redoAction->setIcon(QPixmap(redoXpm));
-    cutAction->setIcon(QPixmap(cutXpm));
-    copyAction->setIcon(QPixmap(copyXpm));
-    pasteAction->setIcon(QPixmap(pasteXpm));
-    commentAction->setIcon(QPixmap(commentXpm));
+    undoAction->setIcon(QPixmap("icons/undo.png"));
+    redoAction->setIcon(QPixmap("icons/redo.png"));
+    cutAction->setIcon(QPixmap("icons/cut.png"));
+    copyAction->setIcon(QPixmap("icons/copy.png"));
+    pasteAction->setIcon(QPixmap("icons/paste.png"));
+    commentAction->setIcon(QPixmap("icons/comment.png"));
 
     contextMenu = new QMenu(this);
 

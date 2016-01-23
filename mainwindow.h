@@ -22,16 +22,12 @@
 #include "codeeditor.h"
 #include "highlighter.h"
 
-namespace Ui {
-class MainWindow;
-}
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow();
     ~MainWindow();
 private:
     QAction* openAction;
@@ -105,11 +101,11 @@ private:
     CodeEditor* editor;
     Highlighter* highlighter;
 
-    QString fileName = "";
-    QString compilerPath = "";
+    QString fileName;
+    QString compilerPath;
 
-    bool fileIsOpen = false;
-    bool editorSetuped = false;
+    bool fileIsOpen;
+    bool editorSetuped;
 
     QLabel* logoLabel;
     QVBoxLayout* logoLayout;
