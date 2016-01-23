@@ -1,5 +1,3 @@
-# C++ objects and libs
-
 *.slo
 *.lo
 *.o
@@ -9,8 +7,6 @@
 *.so
 *.dll
 *.dylib
-
-# Qt-es
 
 /.qmake.cache
 /.qmake.stash
@@ -25,6 +21,6 @@ ui_*.h
 Makefile*
 *build-*
 
-# QtCreator
-
 *.autosave
+
+*.log
