@@ -1,0 +1,3 @@
+BEGINBLOCK MAIN
+PRINT "Hello, world!"
+ENDBLOCK

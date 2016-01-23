@@ -1,0 +1,6 @@
+INTEGER a = 5
+INTEGER b = 5
+INTEGER c
+c = 5
+INPUTVAR c
+DUMP
