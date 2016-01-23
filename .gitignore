@@ -5,7 +5,6 @@
 *.la
 *.lai
 *.so
-*.dll
 *.dylib
 
 /.qmake.cache
