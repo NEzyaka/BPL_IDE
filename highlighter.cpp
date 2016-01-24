@@ -23,9 +23,6 @@
 
 #include "highlighter.h"
 
-#include <fstream>
-#include <vector>
-
 Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //constructor
 {
     HighlightingRule rule;
@@ -41,7 +38,7 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
                      << "\\bALERT\\b" << "\\bNEXTLINE\\b" << "\\bCOMMAND\\b"
                      << "\\bFONTCOLOR\\b" << "\\bDOBLOCK\\b" << "\\bIMPORT\\b"
                      << "\\bBLOCKLIST\\b" << "\\bADD\\b" << "\\bSUBTRACT\\b" << "\\bMULTIPLY\\b"
-                     << "\\bDIVISE\\b" << "\\+" << "\\-" << "\\*" << "\\/" << "\\=";
+                     << "\\bDIVISE\\b" << "AND" << "OR" << "\\+" << "\\-" << "\\*" << "\\/" << "\\=";
     foreach(const QString &pattern, operatorPatterns)
     {
         rule.pattern = QRegExp(pattern);
