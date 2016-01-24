@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 Nikita Mironov
+** Copyright (C) 2015-2016 Nikita Mironov
 ** Contact: nekit2002mir@yandex.ru
 **
 ** This file is part of Turnip Editor source code.
@@ -11,7 +11,7 @@
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
 **
-** Foobar is distributed in the hope that it will be useful,
+** Turnip Editor is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ** GNU General Public License for more details.
@@ -713,7 +713,7 @@ void MainWindow::open() //open
         editor->setPlainText(readFromFile(fileName));
         fileIsOpen = true;
 
-        this->setWindowTitle(fileName + " - Turnip Editor 16.01 Preview");
+        this->setWindowTitle(fileName + " - Turnip Editor 16.01");
 
         writeSessionLog(fileName + " was successfully opened");
     }
@@ -782,7 +782,7 @@ void MainWindow::compile() //interpreting
 void MainWindow::about() //about
 {
     QMessageBox::about(this, "О программе",
-                       "<h1>Turnip Editor 16.01 Preview</h1>"
+                       "<h1>Turnip Editor 16.01</h1>"
                        "<h3>Простая среда разработки для простого языка программирования</h3>"
                        "<p>Добро пожаловать в Turnip Editor! Для работы с Turnip не нужно никакого опыта в программировании, да-да, вы не ослышались, Turnip Editor прекрасно подходит для новичков. Подробнее о Turnip и функциях Turnip Editor смотрите в спарвке (F1).</p>"
 
@@ -797,7 +797,7 @@ void MainWindow::about() //about
                        "общественной лицензии GNU. "
                        "Вы должны были получить копию Стандартной общественной лицензии GNU "
                        "вместе с этой программой. Если это не так, см. <a href = 'http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>.</p>"
-
+                       "<p>Больше информации на  <a href = 'https://github.com/NEzyaka/Turnip-Editor'>https://github.com/NEzyaka/Turnip-Editor</a></p>"
                        "<p><b>Нашли баг, или просто хотите задать вопрос? Пишите <a href='mailto:nekit2002mir@yandex.ru?subject=Message to the Turnip Editor developer' title='Message to the Turnip Editor developer'>сюда</a>.</b></p>"
                        "<p>Copyright (С) 2015-2016 Никита Миронов.</p>");
 
