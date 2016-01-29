@@ -587,76 +587,73 @@ void MainWindow::configsRead() //configs reading
 {
     //reading interpreter path config
     QFile* interpreterPathFromFile = new QFile("configs/compilerConfig.config");
-    if (!interpreterPathFromFile->open(QFile::ReadOnly | QFile::Text))
-        writeToFile("configs/compilerConfig.config", "");
-    else
-    {
-        QString* compilerpath = new QString (readFromFile("configs/compilerConfig.config"));
-        QFileInfo* interpr = new QFileInfo(*compilerpath);
 
-        if(compilerpath->isEmpty() || !interpr->isExecutable())
+    QString* compilerpath = new QString (readFromFile("configs/compilerConfig.config"));
+    QFileInfo* interpr = new QFileInfo(*compilerpath);
+
+    if(compilerpath->isEmpty() || !interpr->isExecutable())
+    {
+        delete interpr;
+        QFileInfo* autoInterpreter = new QFileInfo("Turnip-Runner.exe");
+        if(autoInterpreter->isExecutable())
         {
-            delete interpr;
-            QFileInfo* autoInterpreter = new QFileInfo("bpl_interpreter.exe");
-            if(autoInterpreter->isExecutable())
+            QMessageBox* autoDetecox = new QMessageBox;
+            autoDetecox->setText("<b>Turnip Editor автоматически обнаружил интерпретатор для Turnip<br>в " + QString(autoInterpreter->absolutePath()) + "</b>");
+            autoDetecox->setInformativeText("Вы хотите использовать этот интерпретатор?");
+            autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+            autoDetecox->setDefaultButton(QMessageBox::Yes);
+            int* ret = new int(autoDetecox->exec());
+            delete autoDetecox;
+            switch(*ret)
             {
-                QMessageBox* autoDetecox = new QMessageBox;
-                autoDetecox->setText("<b>Turnip Editor автоматически обнаружил интерпретатор для Turnip<br>в " + QString(autoInterpreter->absolutePath()) + "</b>");
-                autoDetecox->setInformativeText("Вы хотите использовать этот интерпретатор?");
-                autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
-                autoDetecox->setDefaultButton(QMessageBox::Yes);
-                int* ret = new int(autoDetecox->exec());
-                delete autoDetecox;
-                switch(*ret)
-                {
-                case QMessageBox::Yes:
-                    compilerPath = autoInterpreter->absoluteFilePath();
-                    break;
-                case QMessageBox::Cancel:
-                    chooseCompilerPath();
-                    break;
-                }
-                delete ret;
+            case QMessageBox::Yes:
+                compilerPath = autoInterpreter->absoluteFilePath();
+                break;
+            case QMessageBox::Cancel:
+                chooseCompilerPath();
+                break;
             }
-            else
+            delete ret;
+        }
+        else
+        {
+            QString* searchpath = new QString("C:\\");
+            QDirIterator* iterator = new QDirIterator(*searchpath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
+            while(iterator->hasNext())
             {
-                QString* searchpath = new QString("С:\\");
-                QDirIterator* iterator = new QDirIterator(*searchpath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
-                while(iterator->hasNext())
+                iterator->next();
+                if(iterator->fileInfo().absoluteFilePath().contains("Turnip-Runner.exe", Qt::CaseInsensitive))
                 {
-                    iterator->next();
-                    if(iterator->fileInfo().absoluteFilePath().contains("bpl_interpreter", Qt::CaseInsensitive))
+                    QMessageBox* autoDetecox = new QMessageBox;
+                    autoDetecox->setText("<b>Turnip Editor автоматически обнаружил интерпретатор для Turnip<br>в " + QString(iterator->fileInfo().absolutePath() + "</b>"));
+                    autoDetecox->setInformativeText("Вы хотите использовать этот интерпретатор?");
+                    autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+                    autoDetecox->setDefaultButton(QMessageBox::Yes);
+                    int* ret = new int(autoDetecox->exec());
+                    delete autoDetecox;
+                    switch(*ret)
                     {
-                        QMessageBox* autoDetecox = new QMessageBox;
-                        autoDetecox->setText("<b>Turnip Editor автоматически обнаружил интерпретатор для Turnip<br>в " + QString(iterator->fileInfo().absolutePath() + "</b>"));
-                        autoDetecox->setInformativeText("Вы хотите использовать этот интерпретатор?");
-                        autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
-                        autoDetecox->setDefaultButton(QMessageBox::Yes);
-                        int* ret = new int(autoDetecox->exec());
-                        delete autoDetecox;
-                        switch(*ret)
-                        {
-                        case QMessageBox::Yes:
-                            compilerPath = iterator->fileInfo().absoluteFilePath();
-                            break;
-                        case QMessageBox::Cancel:
-                            chooseCompilerPath();
-                            break;
-                        }
-                        delete ret;
+                    case QMessageBox::Yes:
+                        compilerPath = iterator->fileInfo().absoluteFilePath();
+                        break;
+                    case QMessageBox::Cancel:
+                        chooseCompilerPath();
                         break;
                     }
+                    delete ret;
+                    break;
                 }
-                delete searchpath;
-                delete iterator;
-                delete autoInterpreter;
             }
+            delete searchpath;
+            delete iterator;
+            delete autoInterpreter;
         }
-        else compilerPath = *compilerpath;
-        delete compilerpath;
-
-        writeToFile("configs/compilerConfig.config", compilerPath);
     }
+    else compilerPath = *compilerpath;
+    delete compilerpath;
+
+    writeToFile("configs/compilerConfig.config", compilerPath);
+
     interpreterPathFromFile->close();
     delete interpreterPathFromFile;
 
@@ -685,7 +682,6 @@ QString MainWindow::readFromFile(QString filePath)
 
 void MainWindow::writeToFile(QString filePath, QString data)
 {
-    QMessageBox::information(this, "debug", "Arguments: " + filePath + ", " + data);
     QFile* file = new QFile(filePath);
     if(file->open(QIODevice::WriteOnly))
     {
@@ -763,7 +759,6 @@ void MainWindow::compile() //interpreting
         {
             QString* bufPath = new QString(compilerPath);
             QString* arg = new QString(bufPath->append(" " + fileName));
-            QMessageBox::information(this, "debug", "Compiler path: " + *bufPath);
             delete bufPath;
             system(arg->toStdString().c_str());
             delete arg;
@@ -891,10 +886,7 @@ void MainWindow::chooseCompilerPath() //choose interpreter
             compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "Turnip-Runner");
     else compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "Turnip-Runner");
 
-    QMessageBox::information(this, "debug", "Choosed path: " + compilerPath);
-
     writeToFile("configs/compilerConfig.config", compilerPath);
-    QMessageBox::information(this, "debug", "File contents: " + readFromFile("configs/compilerConfig.config"));
     writeSessionLog("Choosed Turnip Runner in " + compilerPath);
 }
 
