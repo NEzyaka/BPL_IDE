@@ -48,4 +48,5 @@ Makefile*
 *.log
 *.bpl
 /release/
+/debug/
 *.config

@@ -205,7 +205,6 @@ void MainWindow::setupFullMenu() //setting up full menubar
 
     setupActions();
 
-    delete startFileMenu;
     delete helpMenu;
 
     setupFileMenu();
@@ -595,7 +594,7 @@ void MainWindow::configsRead() //configs reading
         QString* compilerpath = new QString (readFromFile("configs/compilerConfig.config"));
         QFileInfo* interpr = new QFileInfo(*compilerpath);
 
-        if(*compilerpath == "" || !interpr->isExecutable())
+        if(compilerpath->isEmpty() || !interpr->isExecutable())
         {
             delete interpr;
             QFileInfo* autoInterpreter = new QFileInfo("bpl_interpreter.exe");
@@ -686,6 +685,7 @@ QString MainWindow::readFromFile(QString filePath)
 
 void MainWindow::writeToFile(QString filePath, QString data)
 {
+    QMessageBox::information(this, "debug", "Arguments: " + filePath + ", " + data);
     QFile* file = new QFile(filePath);
     if(file->open(QIODevice::WriteOnly))
     {
@@ -757,12 +757,13 @@ void MainWindow::compile() //interpreting
 {
     save();
 
-    if(fileSaved() == true)
+    if(fileSaved())
     {
         if(!compilerPath.isEmpty())
         {
             QString* bufPath = new QString(compilerPath);
             QString* arg = new QString(bufPath->append(" " + fileName));
+            QMessageBox::information(this, "debug", "Compiler path: " + *bufPath);
             delete bufPath;
             system(arg->toStdString().c_str());
             delete arg;
@@ -887,10 +888,13 @@ void MainWindow::chooseCompilerPath() //choose interpreter
 {
     if(editorSetuped == false)
         while(compilerPath == "")
-            compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "", "Интерпретатор Turnip (*.exe)");
-    else compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "", "Интерпретатор Turnip (*.exe)");
+            compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "Turnip-Runner");
+    else compilerPath = QFileDialog::getOpenFileName(this, "Выбор интерпретатора", "Turnip-Runner");
+
+    QMessageBox::information(this, "debug", "Choosed path: " + compilerPath);
 
     writeToFile("configs/compilerConfig.config", compilerPath);
+    QMessageBox::information(this, "debug", "File contents: " + readFromFile("configs/compilerConfig.config"));
     writeSessionLog("Choosed Turnip Runner in " + compilerPath);
 }
 
