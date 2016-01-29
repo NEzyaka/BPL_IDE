@@ -32,13 +32,17 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     operatorFormat.setFontWeight(QFont::Bold);
     QStringList operatorPatterns;
 
-    operatorPatterns << "\\bSIZE\\b" << "\\bSETVAL\\b" << "\\bDELETE\\b"
-                     << "\\bSWAP\\b" << "\\bPRINT\\b" << "\\bDUMP\\b"
-                     << "\\bDUMPVAR\\b" << "\\bINPUTVAR\\b" << "\\bCLEARSCREEN\\b"
-                     << "\\bALERT\\b" << "\\bNEXTLINE\\b" << "\\bCOMMAND\\b"
-                     << "\\bFONTCOLOR\\b" << "\\bDOBLOCK\\b" << "\\bIMPORT\\b"
-                     << "\\bBLOCKLIST\\b" << "\\bADD\\b" << "\\bSUBTRACT\\b" << "\\bMULTIPLY\\b"
-                     << "\\bDIVISE\\b" << "AND" << "OR" << "\\+" << "\\-" << "\\*" << "\\/" << "\\=";
+    QFile* operators = new QFile("configs/highlight/operators.config");
+    if(operators->open(QIODevice::ReadOnly |QIODevice::Text))
+    {
+        while(!operators->atEnd())
+        {
+            QString str = operators->readLine();
+            operatorPatterns << str.remove(str.length() - 1, 1);
+        }
+    }
+    delete operators;
+
     foreach(const QString &pattern, operatorPatterns)
     {
         rule.pattern = QRegExp(pattern);
@@ -62,9 +66,19 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     variableFormat.setForeground(QColor(245, 215, 110));
     variableFormat.setFontWeight(QFont::Bold);
     QStringList variablePatterns;
-    variablePatterns << "\\bLINE\\b" << "\\bINTEGER\\b"
-                     << "\\bBOOL\\b" << "\\bDOUBLE\\b";
-    foreach (const QString &pattern, variablePatterns)
+
+    QFile* dataTypes = new QFile("configs/highlight/dataTypes.config");
+    if(dataTypes->open(QIODevice::ReadOnly |QIODevice::Text))
+    {
+        while(!dataTypes->atEnd())
+        {
+            QString str = dataTypes->readLine();
+            variablePatterns << str.remove(str.length() - 1, 1);
+        }
+    }
+    delete dataTypes;
+
+    foreach(const QString &pattern, variablePatterns)
     {
         rule.pattern = QRegExp(pattern);
         rule.format = variableFormat;
@@ -89,19 +103,18 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     valueFormat.setFontWeight(QFont::Bold);
     valueFormat.setFontItalic(true);
     QStringList valuePatterns;
-    valuePatterns << "\\bLIGHTGREEN\\b" << "\\bLIGHTWHITE\\b" << "\\bLIGHTPURPLE\\b"
-                  << "\\bLIGHTYELLOW\\b" << "\\bLIGHTRED\\b" << "\\bLIGHTBLUE\\b"
-                  << "\\blightgreen\\b" << "\\blightwhite\\b" << "\\blightpurple\\b"
-                  << "\\blightyellow\\b" << "\\blightred\\b" << "\\blightblue\\b"
-                  << "\\blightgray\\b" << "\\bgray\\b" << "\\bwhite\\b"
-                  << "\\byellow\\b" << "\\bpurple\\b" << "\\bred\\b"
-                  << "\\bcyan\\b" << "\\bgreen\\b" << "\\bblack\\b"
-                  << "\\bblue\\b" << "\\bLIGHTGRAY\\b" << "\\bGRAY\\b"
-                  << "\\bWHITE\\b" << "\\bYELLOW\\b" << "\\bPURPLE\\b"
-                  << "\\bRED\\b" << "\\bCYAN\\b" << "\\bGREEN\\b"
-                  << "\\bBLACK\\b" << "\\bBLUE\\b" << "\\btrue\\b"
-                  << "\\bfalse\\b" << "\\bTRUE\\b" << "\\bFALSE\\b"
-                  << "\\bMAIN\\b" << "1" << "2" << "3" << "4" << "5" << "6" << "7" << "8" << "9" << "0";
+
+    QFile* values = new QFile("configs/highlight/values.config");
+    if(values->open(QIODevice::ReadOnly |QIODevice::Text))
+    {
+        while(!values->atEnd())
+        {
+            QString str = values->readLine();
+            valuePatterns << str.remove(str.length() - 1, 1);
+        }
+    }
+    delete values;
+
     foreach(const QString &pattern, valuePatterns)
     {
         rule.pattern = QRegExp(pattern);
@@ -113,7 +126,17 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     conditionsFormat.setForeground(QColor(54, 215, 183));
     conditionsFormat.setFontWeight(QFont::Bold);
     QStringList conditionsPatterns;
-    conditionsPatterns << "\\bIF\\b" << "\\bELSE\\b" << "\\bENDIF\\b";
+
+    QFile* conditions = new QFile("configs/highlight/conditions.config");
+    if(conditions->open(QIODevice::ReadOnly |QIODevice::Text))
+    {
+        while(!conditions->atEnd())
+        {
+            QString str = conditions->readLine();
+            conditionsPatterns << str.remove(str.length() - 1, 1);
+        }
+    }
+    delete conditions;
 
     foreach(const QString &pattern, conditionsPatterns)
     {
@@ -122,24 +145,21 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
         highlightingRules.append(rule);
     }
 
-    //conditions
-    cyclesFormat.setForeground(QColor(145, 61, 136));
-    cyclesFormat.setFontWeight(QFont::Bold);
-    QStringList cyclesPatterns;
-    cyclesPatterns << "\\bFOR\\b" << "\\bENDFOR\\b";
-
-    foreach(const QString &pattern, cyclesPatterns)
-    {
-        rule.pattern = QRegExp(pattern);
-        rule.format = cyclesFormat;
-        highlightingRules.append(rule);
-    }
-
     //blocks
     blocksFormat.setForeground(QColor(235, 149, 50));
     blocksFormat.setFontWeight(QFont::Bold);
     QStringList blocksPatterns;
-    blocksPatterns << "\\bBEGINBLOCK\\b" << "\\bENDBLOCK\\b";
+
+    QFile* blocks = new QFile("configs/highlight/blocks.config");
+    if(blocks->open(QIODevice::ReadOnly |QIODevice::Text))
+    {
+        while(!blocks->atEnd())
+        {
+            QString str = blocks->readLine();
+            blocksPatterns << str.remove(str.length() - 1, 1);
+        }
+    }
+    delete blocks;
 
     foreach(const QString &pattern, blocksPatterns)
     {
@@ -180,7 +200,6 @@ void Highlighter::highlightBlock(const QString &text) //syntax highlighting
     int startIndex = 0;
     if(previousBlockState() != 1)
         startIndex = commentStartExpression.indexIn(text);
-
 
     while(startIndex >= 0)
     {

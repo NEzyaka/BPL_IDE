@@ -52,7 +52,7 @@ MainWindow::MainWindow() //constructor
     setupLogo();
     setupStartMenu();
 
-    this->setWindowTitle("Turnip Editor 16.01");
+    this->setWindowTitle("Turnip Editor 16.02 Preview");
     this->setWindowIcon(QPixmap("logo.png"));
     this->setMinimumSize(480, 270);
     this->resize(800, 600);
@@ -529,7 +529,7 @@ void MainWindow::writeLog() //appending global log
 {
     QFile* file = new QFile("log.log");
 
-    if (!file->open(QIODevice::Append))
+    if(!file->open(QIODevice::Append))
     {
         QMessageBox::critical(this, "Turnip Editor", "Ошибка записи в лог-файл!");
         return;
@@ -548,7 +548,7 @@ void MainWindow::writeLog() //appending global log
 void MainWindow::writeSessionLog(QString message) //writing session-log
 {
     QFile* file = new QFile("sessionLog.log");
-    if (!file->open(QIODevice::Append))
+    if(!file->open(QIODevice::Append))
     {
         QMessageBox::critical(this, "Turnip Editor", "Ошибка записи в лог-файл сессии!");
         return;
@@ -567,7 +567,7 @@ void MainWindow::writeSessionLog(QString message) //writing session-log
 void MainWindow::clearSessionLog() //cleaning session-log
 {
     QFile* file = new QFile("sessionLog.log");
-    if (!file->open(QIODevice::WriteOnly))
+    if(!file->open(QIODevice::WriteOnly))
     {
         QMessageBox::critical(this, "Turnip Editor", "Ошибка записи в лог-файл сессии!");
         return;
@@ -657,14 +657,57 @@ void MainWindow::configsRead() //configs reading
     interpreterPathFromFile->close();
     delete interpreterPathFromFile;
 
-    //reading completer model
-    QFile* completerModelFromFile = new QFile("configs/completerModel.config");
-    if (!completerModelFromFile->open(QFile::ReadOnly | QFile::Text))
-        writeToFile("configs/completerModel.config", "");
-    completerModelFromFile->close();
-    delete completerModelFromFile;
+    try
+    {
+        //reading completer model
+        QFile* completerModelFromFile = new QFile("configs/completerModel.config");
+        if(!completerModelFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        completerModelFromFile->close();
+        delete completerModelFromFile;
 
-    writeSessionLog("Configuration files were successfully readed");
+        //reading blocks highlighting list
+        QFile* blocksFromFile = new QFile("configs/highlight/blocks.config");
+        if(!blocksFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        blocksFromFile->close();
+        delete blocksFromFile;
+
+        //reading conditions highlighting list
+        QFile* conditionsFromFile = new QFile("configs/highlight/conditions.config");
+        if(!conditionsFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        conditionsFromFile->close();
+        delete conditionsFromFile;
+
+        //reading dataTypes highlighting list
+        QFile* dataTypesFromFile = new QFile("configs/highlight/dataTypes.config");
+        if(!dataTypesFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        dataTypesFromFile->close();
+        delete dataTypesFromFile;
+
+        //reading operators highlighting list
+        QFile* operatorsFromFile = new QFile("configs/highlight/operators.config");
+        if(!operatorsFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        operatorsFromFile->close();
+        delete operatorsFromFile;
+
+        //reading values highlighting list
+        QFile* valuesFromFile = new QFile("configs/highlight/values.config");
+        if(!valuesFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        valuesFromFile->close();
+        delete valuesFromFile;
+
+        writeSessionLog("Configuration files were successfully readed");
+    }
+    catch(...)
+    {
+        QMessageBox::warning(this, "Turnip Editor", "Ошибка чтения конфигурационного файла, возможны сбои в работе программы.");
+        writeSessionLog("Error of reading configs!");
+    }
 }
 
 QString MainWindow::readFromFile(QString filePath)
@@ -709,7 +752,7 @@ void MainWindow::open() //open
         editor->setPlainText(readFromFile(fileName));
         fileIsOpen = true;
 
-        this->setWindowTitle(fileName + " - Turnip Editor 16.01");
+        this->setWindowTitle(fileName + " - Turnip Editor 16.02 Preview");
 
         writeSessionLog(fileName + " was successfully opened");
     }
@@ -778,7 +821,7 @@ void MainWindow::compile() //interpreting
 void MainWindow::about() //about
 {
     QMessageBox::about(this, "О программе",
-                       "<h1>Turnip Editor 16.01</h1>"
+                       "<h1>Turnip Editor 16.02 Preview</h1>"
                        "<h3>Простая среда разработки для простого языка программирования</h3>"
                        "<p>Добро пожаловать в Turnip Editor! Для работы с Turnip не нужно никакого опыта в программировании, да-да, вы не ослышались, Turnip Editor прекрасно подходит для новичков. Подробнее о Turnip и функциях Turnip Editor смотрите в спарвке (F1).</p>"
 

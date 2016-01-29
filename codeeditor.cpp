@@ -123,7 +123,7 @@ int CodeEditor::lineNumberAreaWidth() //setting up line number area width
 {
     int digits = 2;
     int max = qMax(1, blockCount());
-    while (max >= 10)
+    while(max >= 10)
     {
         max /= 10;
         ++digits;
@@ -141,12 +141,12 @@ void CodeEditor::updateLineNumberAreaWidth(int) //updating width of line number 
 
 void CodeEditor::updateLineNumberArea(const QRect &rect, int dy) //updating line number area
 {
-    if (dy)
+    if(dy)
         lineNumberArea->scroll(0, dy);
     else
         lineNumberArea->update(0, rect.y(), lineNumberArea->width(), rect.height());
 
-    if (rect.contains(viewport()->rect()))
+    if(rect.contains(viewport()->rect()))
         updateLineNumberAreaWidth(0);
 }
 
@@ -165,12 +165,12 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) //painting line nu
 
     QTextBlock block = firstVisibleBlock();
     int blockNumber = block.blockNumber();
-    int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
-    int bottom = top + (int) blockBoundingRect(block).height();
+    int top =(int) blockBoundingGeometry(block).translated(contentOffset()).top();
+    int bottom = top +(int) blockBoundingRect(block).height();
 
-    while (block.isValid() && top <= event->rect().bottom())
+    while(block.isValid() && top <= event->rect().bottom())
     {
-        if (block.isVisible() && bottom >= event->rect().top())
+        if(block.isVisible() && bottom >= event->rect().top())
         {
             QString number = QString::number(blockNumber + 1);
             painter.setPen(QColor(/*231, 76, 60*/ fontColor));
@@ -180,7 +180,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) //painting line nu
 
         block = block.next();
         top = bottom;
-        bottom = top + (int) blockBoundingRect(block).height();
+        bottom = top +(int) blockBoundingRect(block).height();
         ++blockNumber;
     }
 }
@@ -191,7 +191,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) //painting line nu
 QAbstractItemModel *CodeEditor::modelFromFile(const QString& fileName) //getting completer model from file
 {
     QFile file(fileName);
-    if (!file.open(QFile::ReadOnly))
+    if(!file.open(QFile::ReadOnly))
         return new QStringListModel(completer);
 
 #ifndef QT_NO_CURSOR
@@ -199,10 +199,10 @@ QAbstractItemModel *CodeEditor::modelFromFile(const QString& fileName) //getting
 #endif
     QStringList words;
 
-    while (!file.atEnd())
+    while(!file.atEnd())
     {
         QByteArray line = file.readLine();
-        if (!line.isEmpty())
+        if(!line.isEmpty())
             words << line.trimmed();
     }
 
@@ -234,7 +234,7 @@ void CodeEditor::keyPressEvent(QKeyEvent* event) //key-press event
 {
     if(completer->popup()->isVisible())
     {
-        switch (event->key())
+        switch(event->key())
         {
         case Qt::Key_Enter:
         case Qt::Key_Return:
@@ -255,7 +255,7 @@ void CodeEditor::keyPressEvent(QKeyEvent* event) //key-press event
         completer->popup()->setCurrentIndex(completer->completionModel()->index(0, 0));
     }
 
-    if (!event->text().isEmpty() && completionPrefix.length() > 2)
+    if(!event->text().isEmpty() && completionPrefix.length() > 2)
     {
         QRect* cr = new QRect(cursorRect());
         cr->setWidth(completer->popup()->sizeHintForColumn(0) + completer->popup()->verticalScrollBar()->sizeHint().width());
