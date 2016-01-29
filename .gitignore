@@ -50,4 +50,3 @@ Makefile*
 *.exe
 /release/
 /debug/
-*.config
