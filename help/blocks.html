@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {
+        font-family: 'Consolas', 'Monospace Regular';
+        color: #2b303b;
+      }
+      .operator {
+        color: #3f51b5;
+        font-weight: bold;
+      }
+      .string {
+        color: #aea8d3;
+        font-style: italic;
+      }
+      .value {
+        color: #f1a9a0;
+        font-style: italic;
+        font-weight: bold;
+      }
+      .var {
+        color: #f5d76e;
+        font-weight: bold;
+      }
+      .condition {
+        color: #36d7b7;
+        font-weight: bold;
+      }
+      .blocks {
+        color: #3f51b5;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Блоки</h1>
+    <h4>Блоки - это разделение кода на определённые участки для удобства программиста.</h4>
+    <h4>В блоке находятся инструкции, которые будут выполнены тогда, когда этот блок будет вызван.</h4>
+
+    <p>
+        <b>Блок вызывается с помощью оператора <font class = 'operator'>DOBLOCK</font></b>. <b>Например,"<font class = 'operator'>DOBLOCK</font></b> myFirstBlock".
+    </p>
+
+    <p>
+        <b>Выполнение программы всегда начинается с блока <font class = 'value'>MAIN</font></b>.
+        <b>Начало блока объявляется с помощью оператора <font class = 'operator'>BEGINBLOCK</font>, а конец - с помощью <font class = 'operator'>ENDBLOCK</font>.</b>
+    </p>
+
+    <p>
+        <b>Давайте рассмотрим пример блока:</b><br>
+        <font class = 'operator'>BEGINBLOCK</font> <font class = 'value'>MAIN</font>
+        <br><font class = 'operator'>PRINT</font> <font class = 'string'>"Hello, world!"</font>
+        <br><font class = 'operator'>ENDBLOCK</font>
+    </p>
+
+    <p>
+        <b>Синтаксис:</b>
+      	<br><font class = 'operator'>BEGINBLOCK</font> имя блока
+      	<br>*содержиме блока*
+      	<br><font class = 'operator'>ENDBLOCK</font>
+    </p>
+
+    <p>
+        <b>Также можно импортировать блоки из других файлов, это делает оператор <font class = 'operator'>IMPORT</font></b>.
+        <b>Например, "<font class = 'operator'>IMPORT</b></font> C:\test.txt".
+    </p>
+
+    <p>
+        <b>Ну и напоследок, КАЖДЫЙ оператор, кроме <font class = 'operator'>IMPORT</font> должен находиться в блоке, все операторы, кроме <font class = 'operator'>IMPORT</font>, которые находятся вне какого-либо блока, выполняться не будут.
+    </p>
+  </body>
+</html>

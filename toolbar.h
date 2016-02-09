@@ -21,47 +21,49 @@
 **
 ****************************************************************************/
 
-#ifndef HIGHLIGHTER_H
-#define HIGHLIGHTER_H
+#ifndef TOOLBAR_H
+#define TOOLBAR_H
 
 
-#include <QSyntaxHighlighter>
-#include <QTextCharFormat>
+#include <QToolBar>
+#include <QAction>
 
-QT_BEGIN_NAMESPACE
-class QTextDocument;
-QT_END_NAMESPACE
 
-class Highlighter : public QSyntaxHighlighter
+class ToolBar : public QToolBar
 {
     Q_OBJECT
-
 public:
-    Highlighter(QTextDocument *parent = 0);
+    explicit ToolBar(QWidget *parent = 0);
+    void retranslateStrings();
+    void setupScheme();
 
-protected:
-    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
+signals:
+    void open();
+    void save();
+    void saveAs();
+    void exit();
+    void undo();
+    void redo();
+    void copy();
+    void paste();
+    void cut();
+    void comment();
+    void interpret();
 
 private:
-    struct HighlightingRule
-    {
-        QRegExp pattern;
-        QTextCharFormat format;
-    };
-    QVector<HighlightingRule> highlightingRules;
+    void createActions();
 
-    QRegExp commentStartExpression;
-    QRegExp commentEndExpression;
-
-    QTextCharFormat operatorFormat;
-    QTextCharFormat variableFormat;
-    QTextCharFormat singleLineCommentFormat;
-    QTextCharFormat multiLineCommentFormat;
-    QTextCharFormat valueFormat;
-    QTextCharFormat errorsFormat;
-    QTextCharFormat conditionsFormat;
-    QTextCharFormat quotationFormat;
-    QTextCharFormat blocksFormat;
+    QAction* openAction;
+    QAction* saveAction;
+    QAction* saveAsAction;
+    QAction* exitAction;
+    QAction* undoAction;
+    QAction* redoAction;
+    QAction* cutAction;
+    QAction* copyAction;
+    QAction* pasteAction;
+    QAction* commentAction;
+    QAction* interpretAction;
 };
 
-#endif // HIGHLIGHTER_H
+#endif // TOOLBAR_H

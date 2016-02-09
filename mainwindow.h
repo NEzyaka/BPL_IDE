@@ -25,11 +25,19 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QAction>
-#include <QToolBar>
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QTranslator>
+#include <QDir>
+#include <QLibraryInfo>
+#include <QDebug>
 #include <QLabel>
-#include <QVBoxLayout>
+#include <QBoxLayout>
 
+#include "menubar.h"
+#include "startmenubar.h"
+#include "toolbar.h"
+#include "manualviewer.h"
 #include "codeeditor.h"
 #include "highlighter.h"
 
@@ -38,50 +46,27 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow();
+    MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    void changeEvent(QEvent *event);
 private:
-    QAction* openAction;
-    QAction* saveAction;
-    QAction* saveAsAction;
-    QAction* exitAction;
-    QAction* compileAction;
-    QAction* aboutAction;
-    QAction* aboutQtAction;
-    QAction* cutAction;
-    QAction* copyAction;
-    QAction* pasteAction;
-    QAction* undoAction;
-    QAction* redoAction;
-    QAction* fullscrAction;
-    QAction* moveToolbarsAction;
-    QAction* chooseCompilerPathAction;
-    QAction* commentAction;
-    QAction* helpAction;
+    QTranslator* qtTranslator;
+    QTranslator* appTranslator;
+    void setLanguage(QString language);
 
-    QAction* commentTBAction;
-    QAction* compileTBAction;
-    QAction* copyTBAction;
-    QAction* cutTBAction;
-    QAction* exitTBAction;
-    QAction* openTBAction;
-    QAction* pasteTBAction;
-    QAction* redoTBAction;
-    QAction* saveTBAction;
-    QAction* saveAsTBAction;
-    QAction* undoTBAction;
+    MenuBar* menuBar;
+    StartMenuBar* startMenuBar;
+    ToolBar* toolBar;
+    QLabel* columnLine;
+    QStatusBar* statBar;
 
-    void setupActions();
+    void createMenu();
+    void createStartMenu();
+    void createToolBar();
+    void retranslateStrings();
+
     void setupEditor();
-    void setupFullMenu();
-    void setupStartMenu();
-    void setupStartFileMenu();
-    void setupFileMenu();
-    void setupEditMenu();
-    void setupCompileMenu();
-    void setupSettingsMenu();
-    void setupHelpMenu();
-    void setupToolbar();
     void configsRead();
     void setupLogo();
     bool fileSaved();
@@ -90,24 +75,9 @@ private:
     void writeSessionLog(QString message);
     void clearSessionLog();
     void setupTheme();
-    void setupFileBar();
-    void setupEditBar();
-    void setupInterprBar();
+
     QString readFromFile(QString filePath);
     void writeToFile(QString filePath, QString data);
-
-    QToolBar* fileBar;
-    QToolBar* editBar;
-    QToolBar* interprBar;
-
-    QMenu* startFileMenu;
-    QMenu* fileMenu;
-    QMenu* editMenu;
-    QMenu* compileMenu;
-    QMenu* settingsMenu;
-    QMenu* helpMenu;
-    QMenu* environmentMenu;
-    QMenu* langMenu;
 
     CodeEditor* editor;
     Highlighter* highlighter;
@@ -115,33 +85,35 @@ private:
     QString fileName;
     QString compilerPath;
 
-    bool fileIsOpen;
-    bool editorSetuped;
+    bool fileIsOpen = false;
+    bool editorSetuped = false;
 
     QLabel* logoLabel;
     QVBoxLayout* logoLayout;
     QHBoxLayout* logoLayout1;
-
-    void contextMenuEvent(QContextMenuEvent *event);
-
     QWidget *backgroundBox;
 
-    QLabel* columnLine;
-    QLabel* fileLabel;
-    QStatusBar* statBar;
+    QString currentLang;
+
 private slots:
-    void about();
-    void compile();
+    void open();
     void save();
     void saveAs();
-    void open();
     void exit();
-    void fullscr();
-    void moveToolbars();
-    void chooseCompilerPath();
+    void undo();
+    void redo();
+    void copy();
+    void paste();
+    void cut();
     void comment();
+    void interpret();
+    void fullscr();
+    void chooseInterpreter();
+    void setLanguage(QAction* language);
+    void about();
+    void aboutQt();
+    void manual();
     void textChanged();
-    void help();
 };
 
 #endif // MAINWINDOW_H

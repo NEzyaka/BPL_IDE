@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {
+        font-family: 'Consolas', 'Monospace Regular';
+        color: #2b303b;
+      }
+      .operator {
+        color: #3f51b5;
+        font-weight: bold;
+      }
+      .string {
+        color: #aea8d3;
+        font-style: italic;
+      }
+      .value {
+        color: #f1a9a0;
+        font-style: italic;
+        font-weight: bold;
+      }
+      .var {
+        color: #f5d76e;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Типы данных, переменные</h1>
+    <h4>Переменные - это ячейки в оперативной памяти компьютера, котрые хранят данные во время выполнения программ.</h4>
+    <h4>Для удобства программистов у каждой переменной есть свой тип данных, который позволяет хранить только определённый тип информации.</h4>
+
+    <p>
+        <b>Пока в языке BPL есть 4 типа данных:</b>
+        <ul>
+          <li><font class = 'var'>INTEGER</font> (целые числа, например, <font class = 'value'>12</font>);
+          <li><font class = 'var'>DOUBLE</font> (десятичные дроби, например, <font class = 'value'>15.22</font>);
+          <li><font class = 'var'>LINE</font> (строки, например, <font class = 'string'>"Hello"</font>);
+          <li><font class = 'var'>BOOL</font> (логические значения, имеет только два значения: <font class = 'value'>TRUE</font> и <font class = 'value'>FALSE</font>).
+        </ul>
+    </p>
+
+    <p>
+        <b>Переменная - это ячейка в памяти компьютера, у неё есть своё значение, которое занимает определённое место в оперативной памяти компьютера. Для того, чтобы работать с переменными, в BPL есть специальные операторы для работы с ними, их 13:</b>
+        <ul>
+          <li><font class = 'operator'>PRINT</font> (В данном случае: вывод на экран значения переменной);
+          <li><font class = 'operator'>INPUTVAR</font> (Ввод значения пееменной с клавиатуры);
+          <li><font class = 'operator'>DUMP</font> (Вывод на экран информации обо всех объявленных переменных);
+          <li><font class = 'operator'>DUMPVAR</font> (Вывод на экран информации об одной иди двух переменных);
+          <li><font class = 'operator'>SWAP</font> (Замена местами значений двух переменных);
+          <li><font class = 'operator'>DELETE</font> (Удаление переменной из памяти);
+          <li><font class = 'operator'>SIZE</font> (Вывод на экран размера переменной в памяти);
+          <li><font class = 'operator'>SETVAL</font> (Установка точного значения переменной);
+          <li><font class = 'operator'>INVERT</font> (Инвертирование значения переменной);
+          <li><font class = 'operator'>ADD</font> (Прибавление к значению какой-либо переменной числа, или значения переменной);
+          <li><font class = 'operator'>SUBTRACT</font> (Вычитание из значения какой-либо переменной числа, или значения переменной);
+          <li><font class = 'operator'>MULTIPLY</font> (Умножение значения какой-либо переменной на число, или значение переменной);
+          <li><font class = 'operator'>DIVISE</font> (Деление значения какой-либо переменной на число, или значение переменной).
+        </ul>
+    </p>
+
+    <p>
+        <b>Для того, чтобы объявить переменную нужно сделать следующую запись:</b> "<font class = 'var'>ТИП ДАННЫХ</font> имя переменной"
+    </p>
+
+    <p>
+        <b>Давайте разберём пример работы с переменными. Например, нам нужно узнать имя пользователя и вывести 'Hello %введённое имя пользователя%' Для этого нам нужно: звести переменную строкового типа, считать её значение, вывести 'Hello ' + значение переменной. Должен получиться следующий код:</b>
+        <br><font class = 'var'>LINE</font> name
+        <br><font class = 'operator'>INPUTVAR</b></font> name
+        <br><font class = 'operator'>PRINT</font> <font class = 'string'>"Hello "</font> <font class = 'operator'>AND</font> name
+    </p>
+
+    <p>
+        <b>Также можно иинициализировать (то есть, задать значение сразу, при объявлении). Это не сложнее, чем просто объявить переменную:</b>
+        "<font class = 'var'>ТИП ДАННЫХ</font> имя переменной = <font class = 'value'>значение</font>".
+    </p>
+
+    <p>
+        <b>Можно привести ещё пример: замена значения переменной. Нам необходимо завести переменную с каким-то значением, а потом поменять это значение на какое-либо другое. В качестве проверки значения будем использовать оператор DUMPVAR. Код:</b>
+        <br><font class = 'var'>INTEGER</font> a = <font color = #f1a9a0 ><b><i>15</i></b></font>
+        <br><font class = 'operator'>DUMPVAR</font> a
+        <br><font class = 'operator'>SETVAL</font> a <font color = #f1a9a0 ><b><i>20</i></b></font>
+        <br><font class = 'operator'>DUMPVAR</font> a
+    </p>
+
+  </body>
+</html>

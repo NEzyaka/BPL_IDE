@@ -21,47 +21,39 @@
 **
 ****************************************************************************/
 
-#ifndef HIGHLIGHTER_H
-#define HIGHLIGHTER_H
+#ifndef STARTMENUBAR_H
+#define STARTMENUBAR_H
 
+#include <QAction>
+#include <QMenuBar>
 
-#include <QSyntaxHighlighter>
-#include <QTextCharFormat>
-
-QT_BEGIN_NAMESPACE
-class QTextDocument;
-QT_END_NAMESPACE
-
-class Highlighter : public QSyntaxHighlighter
+class StartMenuBar : public QMenuBar
 {
     Q_OBJECT
-
 public:
-    Highlighter(QTextDocument *parent = 0);
+    explicit StartMenuBar(QWidget *parent = 0);
+    void retranslateStrings();
 
-protected:
-    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
+signals:
+    void open();
+    void exit();
+    void about();
+    void aboutQt();
+    void manual();
 
 private:
-    struct HighlightingRule
-    {
-        QRegExp pattern;
-        QTextCharFormat format;
-    };
-    QVector<HighlightingRule> highlightingRules;
+    void createActions();
+    void createMenus();
+    void setupScheme();
 
-    QRegExp commentStartExpression;
-    QRegExp commentEndExpression;
+    QAction* openAction;
+    QAction* exitAction;
+    QAction* aboutAction;
+    QAction* aboutQtAction;
+    QAction* manualAction;
 
-    QTextCharFormat operatorFormat;
-    QTextCharFormat variableFormat;
-    QTextCharFormat singleLineCommentFormat;
-    QTextCharFormat multiLineCommentFormat;
-    QTextCharFormat valueFormat;
-    QTextCharFormat errorsFormat;
-    QTextCharFormat conditionsFormat;
-    QTextCharFormat quotationFormat;
-    QTextCharFormat blocksFormat;
+    QMenu* startFileMenu;
+    QMenu* helpMenu;
 };
 
-#endif // HIGHLIGHTER_H
+#endif // STARTMENUBAR_H

@@ -22,15 +22,19 @@
 ****************************************************************************/
 
 #include <QtWidgets>
+#include <QtGui>
+#include <QRect>
 
 #include "codeeditor.h"
 #include "mainwindow.h"
 
-#include <QtGui>
-#include <QRect>
 
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent) //constructor
 {
+    createActions();
+    createMenus();
+    retranslateStrings();
+
     lineNumberArea = new LineNumberArea(this);
 
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
@@ -57,13 +61,33 @@ void CodeEditor::comment() //commenting line
     delete tc;
 }
 
-
-//line number area
-
-void CodeEditor::contextMenuEvent(QContextMenuEvent *e) //setting up context menu
+void CodeEditor::setupScheme()
 {
-    QMenu* contextMenu;
+    this->setupFont();
 
+    backColor = QColor(43, 48, 59);
+    fontColor = QColor(84, 96, 107);
+
+    this->setStyleSheet("CodeEditor { background: rgb(43, 48, 59); color: rgb(192, 197, 206); border: none; selection-background-color: rgb(192, 197, 206); selection-color: rgb(43, 48, 49) }"
+                        "QScrollBar:vertical { background: transparent; border-top-right-radius: 4px; border-bottom-right-radius: 4px; width: 12px; margin: 0px; }"
+                        "QScrollBar::handle:vertical { background-color: rgb(61, 70, 79); border-radius: 3px; min-height: 20px; margin: 0px 2px 0px 2px; }"
+                        "QScrollBar::add-line:vertical { background: none; height: 0px; subcontrol-position: right; subcontrol-origin: margin; }"
+                        "QScrollBar::sub-line:vertical { background: none; height: 0px; subcontrol-position: left; subcontrol-origin: margin; }"
+                        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }");
+}
+
+void CodeEditor::setupFont()
+{
+    this->setLocale(QLocale::Russian);
+    QFont font;
+    font.setFamily("Consolas");
+    font.setFixedPitch(true);
+    font.setPointSize(13);
+    this->setFont(font);
+}
+
+void CodeEditor::createActions()
+{
     undoAction = new QAction(this);
     redoAction = new QAction(this);
     cutAction = new QAction(this);
@@ -77,14 +101,36 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *e) //setting up context men
     copyAction->setShortcut(Qt::CTRL + Qt::Key_C);
     pasteAction->setShortcut(Qt::CTRL + Qt::Key_V);
 
-    undoAction->setIcon(QPixmap("icons/undo.png"));
-    redoAction->setIcon(QPixmap("icons/redo.png"));
-    cutAction->setIcon(QPixmap("icons/cut.png"));
-    copyAction->setIcon(QPixmap("icons/copy.png"));
-    pasteAction->setIcon(QPixmap("icons/paste.png"));
-    commentAction->setIcon(QPixmap("icons/comment.png"));
+    undoAction->setIcon(QPixmap(":icons/undo.png"));
+    redoAction->setIcon(QPixmap(":icons/redo.png"));
+    cutAction->setIcon(QPixmap(":icons/cut.png"));
+    copyAction->setIcon(QPixmap(":icons/copy.png"));
+    pasteAction->setIcon(QPixmap(":icons/paste.png"));
+    commentAction->setIcon(QPixmap(":icons/comment.png"));
 
+    connect(cutAction, SIGNAL(triggered()), this, SLOT(cut()));
+    connect(copyAction, SIGNAL(triggered()), this, SLOT(copy()));
+    connect(pasteAction, SIGNAL(triggered()), this, SLOT(paste()));
+    connect(undoAction, SIGNAL(triggered()), this, SLOT(undo()));
+    connect(redoAction, SIGNAL(triggered()), this, SLOT(redo()));
+    connect(commentAction, SIGNAL(triggered()), this, SLOT(comment()));
+}
+
+void CodeEditor::createMenus()
+{
     contextMenu = new QMenu(this);
+}
+
+void CodeEditor::retranslateStrings()
+{
+    contextMenu->clear();
+
+    undoAction->setText(tr("Undo"));
+    redoAction->setText(tr("Redo"));
+    cutAction->setText(tr("Cut"));
+    copyAction->setText(tr("Copy"));
+    pasteAction->setText(tr("Paste"));
+    commentAction->setText(tr("Comment a line"));
 
     contextMenu->addAction(cutAction);
     contextMenu->addAction(copyAction);
@@ -94,29 +140,12 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *e) //setting up context men
     contextMenu->addAction(redoAction);
     contextMenu->addSeparator();
     contextMenu->addAction(commentAction);
+}
 
-    connect(cutAction, SIGNAL(triggered()), this, SLOT(cut()));
-    connect(copyAction, SIGNAL(triggered()), this, SLOT(copy()));
-    connect(pasteAction, SIGNAL(triggered()), this, SLOT(paste()));
-    connect(undoAction, SIGNAL(triggered()), this, SLOT(undo()));
-    connect(redoAction, SIGNAL(triggered()), this, SLOT(redo()));
-    connect(commentAction, SIGNAL(triggered()), this, SLOT(comment()));
-
-    undoAction->setText("Отменить");
-    redoAction->setText("Повторить");
-    cutAction->setText("Вырезать");
-    copyAction->setText("Копировать");
-    pasteAction->setText("Вставить");
-    commentAction->setText("Закомментировать строку");
-
+void CodeEditor::contextMenuEvent(QContextMenuEvent *e) //setting up context menu
+{
+    retranslateStrings();
     contextMenu->exec(e->globalPos());
-
-    delete contextMenu;
-    delete undoAction;
-    delete redoAction;
-    delete cutAction;
-    delete copyAction;
-    delete pasteAction;
 }
 
 int CodeEditor::lineNumberAreaWidth() //setting up line number area width
@@ -263,4 +292,3 @@ void CodeEditor::keyPressEvent(QKeyEvent* event) //key-press event
         delete cr;
     }
 }
-

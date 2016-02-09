@@ -219,4 +219,3 @@ void Highlighter::highlightBlock(const QString &text) //syntax highlighting
         startIndex = commentStartExpression.indexIn(text, startIndex + commentLength);
     }
 }
-

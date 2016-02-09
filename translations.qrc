@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/translations">
+        <file alias="english.qm">translations/english.qm</file>
+        <file alias="german.qm">translations/german.qm</file>
+        <file alias="russian.qm">translations/russian.qm</file>
+    </qresource>
+</RCC>

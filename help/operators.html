@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {
+        font-family: 'Consolas', 'Monospace Regular';
+        color: #2b303b;
+      }
+      .operator {
+        color: #3f51b5;
+        font-weight: bold;
+      }
+      .string {
+        color: #aea8d3;
+        font-style: italic;
+      }
+      .value {
+        color: #f1a9a0;
+        font-style: italic;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Операторы</h1>
+    <h3>Оператор - это  команда, которую получает, обрабатывает и выполняет специальная программа - интерпретатор.</h3>
+    <h3>Интерпретатор - это специальная программа, которая выполняет команды, которые поступают из кода.</h3>
+    <p>
+        <h4>Синатксис:</h4>
+        <font class = 'operator'>ОПЕРАТОР</font> аргумент
+        <br>или просто<br>
+        <font class = 'operator'>ОПЕРАТОР</font>
+    </p>
+
+    <p>
+        <b>Пока в языке BPL есть 21 оператор:</b>
+        <ul>
+          <li><font class = 'operator'>PRINT</font>;
+          <li><font class = 'operator'>INPUTVAR</font>;
+          <li><font class = 'operator'>ALERT</font>;
+          <li><font class = 'operator'>NEXTLINE</font>;
+          <li><font class = 'operator'>CLEARSCREEN</font>;
+          <li><font class = 'operator'>DUMP</font>;
+          <li><font class = 'operator'>DUMPVAR</font>;
+          <li><font class = 'operator'>COMMAND</font>;
+          <li><font class = 'operator'>FONTCOLOR</font>;
+          <li><font class = 'operator'>SWAP</font>;
+          <li><font class = 'operator'>DELETE</font>;
+          <li><font class = 'operator'>SIZE</font>;
+          <li><font class = 'operator'>SETVAL</font>;
+          <li><font class = 'operator'>DOBLOCK</font>;
+          <li><font class = 'operator'>BLOCKLIST</font>;
+          <li><font class = 'operator'>IMPORT</font>;
+          <li><font class = 'operator'>INVERT</font>;
+          <li><font class = 'operator'>ADD</font>;
+          <li><font class = 'operator'>SUBTRACT</font>;
+          <li><font class = 'operator'>MULTIPLY</font>;
+          <li><font class = 'operator'>DIVISE</font>.
+        </ul>
+    </p>
+
+    <p>
+        Возможно, по их названиям Вы уже поняли, что делает каждый из представленных операторов, но всё равно следует подробно разобрать каждый из них.
+    </p>
+
+    <p>
+      <b>Оператор PRINT</b> выводит в консоль строку/значение переменной/и то, и другое. Например, команда
+      "<font class = 'operator'>PRINT</font> <font class = 'string'>"Hello, world!"</font>" выведет в консоль строку Hello, world!
+    </p>
+
+    <p>
+      <b>Оператор ALERT</b> издаёт звуковой сигнал.
+    </p>
+
+    <p>
+      <b>Оператор NEXTLINE</b> переводит строку на следующую. Например программа
+      <br><font class = 'operator'>PRINT</font> <font class = 'string'>"First Line"</font>
+      <br><font class = 'operator'>NEXTLINE</font>
+      <br><font class = 'operator'>PRINT</font> <font class = 'string'>"Second Line"</font>
+      <br>выведет в консоль<br>
+      First Line<br>Second Line
+    </p>
+
+    <p>
+      <b>Оператор CLEARSCREEN</b> очищает консоль.
+    </p>
+
+    <p>
+      <b>Оператор COMMAND</b> запускает командную строку с определёнными аргументами.
+      Например, оператор "<font class = 'operator'>COMMAND</font> help" откроет окно командной строки, где будет показан справка по командам.
+    </p>
+
+    <p>
+      <b>Оператор FONTCOLOR</b> устанавливает определённый цвет шрифта.
+      Например, "<font class = 'operator'>FONTCOLOR</font> <font class = 'value'>LIGHTGREEN</font>" установит ярко-зелёный цвет шрифта в консоли.
+    </p>
+
+    <p>
+      Так как остальные операторы работают с переменными, их работа будет описана в разделе 'Типы данных'
+    </p>
+
+  </body>
+</html>

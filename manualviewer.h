@@ -21,47 +21,46 @@
 **
 ****************************************************************************/
 
-#ifndef HIGHLIGHTER_H
-#define HIGHLIGHTER_H
+#ifndef MANUALVIEWER_H
+#define MANUALVIEWER_H
 
+#include <QDialog>
+#include <QTableWidget>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QTextBrowser>
+#include <QFont>
 
-#include <QSyntaxHighlighter>
-#include <QTextCharFormat>
-
-QT_BEGIN_NAMESPACE
-class QTextDocument;
-QT_END_NAMESPACE
-
-class Highlighter : public QSyntaxHighlighter
+class ManualViewer : public QDialog
 {
     Q_OBJECT
-
 public:
-    Highlighter(QTextDocument *parent = 0);
-
-protected:
-    void highlightBlock(const QString &text) Q_DECL_OVERRIDE;
-
+    explicit ManualViewer(QWidget *parent = 0);
 private:
-    struct HighlightingRule
-    {
-        QRegExp pattern;
-        QTextCharFormat format;
-    };
-    QVector<HighlightingRule> highlightingRules;
+    QTabWidget* parts;
 
-    QRegExp commentStartExpression;
-    QRegExp commentEndExpression;
+    QWidget* startWidget;
+    QWidget* operatorsWidget;
+    QWidget* varsWidget;
+    QWidget* ifWidget;
+    QWidget* blocksWidget;
 
-    QTextCharFormat operatorFormat;
-    QTextCharFormat variableFormat;
-    QTextCharFormat singleLineCommentFormat;
-    QTextCharFormat multiLineCommentFormat;
-    QTextCharFormat valueFormat;
-    QTextCharFormat errorsFormat;
-    QTextCharFormat conditionsFormat;
-    QTextCharFormat quotationFormat;
-    QTextCharFormat blocksFormat;
+    QVBoxLayout* helpLayout;
+    QVBoxLayout* startLayout;
+    QVBoxLayout* operatorsLayout;
+    QVBoxLayout* varsLayout;
+    QVBoxLayout* ifLayout;
+    QVBoxLayout* blocksLayout;
+
+    QFont font;
+    QTextBrowser* startView;
+    QTextBrowser* operatorsView;
+    QTextBrowser* varsView;
+    QTextBrowser* ifView;
+    QTextBrowser* blocksView;
+
+    QString readFromFile(QString filePath);
+    void setupTabs();
 };
 
-#endif // HIGHLIGHTER_H
+#endif // MANUALVIEWER_H

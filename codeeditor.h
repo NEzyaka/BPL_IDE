@@ -21,9 +21,9 @@
 **
 ****************************************************************************/
 
-
 #ifndef CODEEDITOR_H
 #define CODEEDITOR_H
+
 
 #include <QPlainTextEdit>
 #include <QObject>
@@ -50,19 +50,33 @@ public:
     QColor fontColor;
 
     QString number;
-
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
+
+    void retranslateStrings();
+    void setupScheme();
 protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
     void updateLineNumberArea(const QRect &, int);
-    void insertCompletion( const QString& completion );
+    void insertCompletion(const QString& completion);
+
 private:
     QWidget* lineNumberArea;
 
+    void keyPressEvent(QKeyEvent* event);
+    QString textUnderCursor() const;
+    QStringList* words;
+    QCompleter* completer;
+
+    void contextMenuEvent(QContextMenuEvent *e);
+    QAbstractItemModel *modelFromFile(const QString& fileName);
+
+    void createActions();
+    void createMenus();
+    QMenu* contextMenu;
     QAction* cutAction;
     QAction* copyAction;
     QAction* pasteAction;
@@ -70,16 +84,9 @@ private:
     QAction* redoAction;
     QAction* commentAction;
 
-    void keyPressEvent( QKeyEvent* event );
-    QString textUnderCursor()const;
+    void setupFont();
 
-    QCompleter* completer;
-
-    void contextMenuEvent(QContextMenuEvent *e);
-    QAbstractItemModel *modelFromFile(const QString& fileName);
-
-    QStringList* words;
-private slots:
+public slots:
     void comment();
 };
 
@@ -103,5 +110,4 @@ private:
     CodeEditor *codeEditor;
 };
 
-#endif
-
+#endif // CODEEDITOR_H

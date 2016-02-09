@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/help">
+        <file alias = "blocks.html">help/blocks.html</file>
+        <file alias = "if.html">help/if.html</file>
+        <file alias = "operators.html">help/operators.html</file>
+        <file alias = "start.html">help/start.html</file>
+        <file alias = "vars.html">help/vars.html</file>
+    </qresource>
+</RCC>

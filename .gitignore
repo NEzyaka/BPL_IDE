@@ -20,7 +20,8 @@ qrc_*.cpp
 ui_*.h
 Makefile*
 *build-*
-
+*.Turnip-Editor.Debug
+*.Turnip-Editor.Release
 *.autosave
 
 *.qmlproject.user
@@ -47,6 +48,7 @@ Makefile*
 
 *.log
 *.bpl
+*.trnp
 *.exe
 /release/
 /debug/
