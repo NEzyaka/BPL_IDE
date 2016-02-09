@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setupLogo();
     createStartMenu();
 
-    this->setWindowTitle("Turnip Editor 16.02 Preview");
+    this->setWindowTitle("Turnip Editor 16.02");
     this->setWindowIcon(QPixmap(":icons/logo.png"));
     this->setMinimumSize(480, 270);
     this->resize(800, 600);
@@ -224,7 +224,7 @@ void MainWindow::writeLog() //appending global log
 
     if(!file->open(QIODevice::Append))
     {
-        QMessageBox::critical(this, "Turnip Editor", "Ошибка записи в лог-файл!");
+        QMessageBox::critical(this, "Turnip Editor", tr("Error of writing to log!"));
         return;
     }
     else
@@ -243,7 +243,7 @@ void MainWindow::writeSessionLog(QString message) //writing session-log
     QFile* file = new QFile("sessionLog.log");
     if(!file->open(QIODevice::Append))
     {
-        QMessageBox::critical(this, "Turnip Editor", "Ошибка записи в лог-файл сессии!");
+        QMessageBox::critical(this, "Turnip Editor", tr("Error of writing to log!"));
         return;
     }
     else
@@ -262,7 +262,7 @@ void MainWindow::clearSessionLog() //cleaning session-log
     QFile* file = new QFile("sessionLog.log");
     if(!file->open(QIODevice::WriteOnly))
     {
-        QMessageBox::critical(this, "Turnip Editor", "Ошибка записи в лог-файл сессии!");
+        QMessageBox::critical(this, "Turnip Editor", tr("Error of writing to log!"));
         return;
     }
     else
@@ -291,8 +291,8 @@ void MainWindow::configsRead() //configs reading
         if(autoInterpreter->isExecutable())
         {
             QMessageBox* autoDetecox = new QMessageBox;
-            autoDetecox->setText("<b>Turnip Editor автоматически обнаружил интерпретатор для Turnip<br> в " + QString(autoInterpreter->absolutePath()) + "</b>");
-            autoDetecox->setInformativeText("Вы хотите использовать этот интерпретатор?");
+            autoDetecox->setText(tr("<b>Turnip Editor automatically found Turnip Runner<br> in ") + QString(autoInterpreter->absolutePath()) + "</b>");
+            autoDetecox->setInformativeText(tr("Do you want to use this interpreter?"));
             autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
             autoDetecox->setDefaultButton(QMessageBox::Yes);
             int* ret = new int(autoDetecox->exec());
@@ -318,8 +318,8 @@ void MainWindow::configsRead() //configs reading
                 if(iterator->fileInfo().absoluteFilePath().contains("Turnip-Runner.exe", Qt::CaseInsensitive))
                 {
                     QMessageBox* autoDetecox = new QMessageBox;
-                    autoDetecox->setText("<b>Turnip Editor автоматически обнаружил интерпретатор для Turnip<br> в " + QString(iterator->fileInfo().absolutePath() + "</b>"));
-                    autoDetecox->setInformativeText("Вы хотите использовать этот интерпретатор?");
+                    autoDetecox->setText(tr("<b>Turnip Editor automatically found Turnip Runner<br> in ") + QString(iterator->fileInfo().absolutePath() + "</b>"));
+                    autoDetecox->setInformativeText(tr("Do you want to use this interpreter?"));
                     autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
                     autoDetecox->setDefaultButton(QMessageBox::Yes);
                     int* ret = new int(autoDetecox->exec());
@@ -406,7 +406,7 @@ void MainWindow::configsRead() //configs reading
     }
     catch(...)
     {
-        QMessageBox::warning(this, "Turnip Editor", "Ошибка чтения конфигурационного файла, возможны сбои в работе программы.");
+        QMessageBox::warning(this, "Turnip Editor", tr("Error of reding configuration file, program may be crashed!"));
         writeSessionLog("Error of reading configs!");
     }
 }
@@ -478,7 +478,7 @@ void MainWindow::open()
         editor->setPlainText(readFromFile(fileName));
         fileIsOpen = true;
 
-        this->setWindowTitle(fileName + " - Turnip Editor 16.02 Preview");
+        this->setWindowTitle(fileName + " - Turnip Editor 16.02");
 
         writeSessionLog(fileName + " was successfully opened");
     }
@@ -605,13 +605,13 @@ void MainWindow::interpret()
         }
         else
         {
-            QMessageBox::critical(this, "Turnip Editor", "Интерпретатор не найден или повреждён. Пожалуйста, выберите интерпретатор.");
+            QMessageBox::critical(this, "Turnip Editor", tr("Turnip Runner not found or is invalid. Please, choose the correct interpreter."));
             writeSessionLog("Error of interpreting " + fileName);
             chooseInterpreter();
             interpret();
         }
     }
-    else QMessageBox::critical(this, "Turnip Editor", "Ошибка сохранения файла!");
+    else QMessageBox::critical(this, "Turnip Editor", tr("Error of saving file!"));
 
 }
 
@@ -713,8 +713,6 @@ void MainWindow::manual()
 
     if(viewer->exec() == 0)
         delete viewer;
-
-    writeSessionLog("Shown manual");
 }
 
 void MainWindow::textChanged()
