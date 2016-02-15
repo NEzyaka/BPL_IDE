@@ -43,7 +43,8 @@ HEADERS      += mainwindow.h \
                 highlighter.h \
                 toolbar.h \
                 startmenubar.h \
-                manualviewer.h
+                manualviewer.h \
+    widget.h
 
 TRANSLATIONS += translations/russian.ts \
                 translations/english.ts \
@@ -56,3 +57,5 @@ RESOURCES    += icons.qrc \
                 translations.qrc
 
 DISTFILES    += resources.rc
+
+QMAKE_LFLAGS_RELEASE += -static -static-libgcc

@@ -29,7 +29,6 @@ ToolBar::ToolBar(QWidget *parent) : QToolBar(parent)
     createActions();
     retranslateStrings();
     setMovable(true);
-    setupScheme();
 }
 
 void ToolBar::setupScheme()

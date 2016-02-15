@@ -28,6 +28,7 @@
 ManualViewer::ManualViewer(QWidget *parent) : QDialog(parent)
 {
     this->setWindowTitle(tr("Manual"));
+    this->setWindowIcon(QPixmap(":icons/logo.png"));
     this->resize(750, 500);
     this->setMinimumSize(750, 500);
 
@@ -107,6 +108,21 @@ void ManualViewer::setupTabs()
     this->setLayout(helpLayout);
 
     parts->setStyleSheet("QTabWidget::tab-bar { alignment: center; }"
-                         "QTextBrowser { border:none; }");
+                         "QTabWidget::pane { padding: -9px -9px -9px -9px; }"
+                         "QTabBar::tab { font-family: Segoe UI; font: 9pt; background: rgb(245, 246, 248); border-bottom: none; border-top-right-radius: 4px; border-top-left-radius: 4px; min-width: 80px; padding: 5px; }"
+                         "QTabBar::tab:selected, QTabBar::tab:hover { background: rgb(43, 48, 59); color: rgb(245, 246, 248); }"
+                         "QTabBar::tab:!selected { margin-top: 5px; }"
+                         "QTabBar::tab:selected { margin-left: -4px; margin-right: -4px; }"
+                         "QTabBar::tab:first:selected { margin-left: 0; }"
+                         "QTabBar::tab:last:selected { margin-right: 0; }"
+                         "QTabBar::tab:only-one { margin: 0; }"
+                         "QTextBrowser { border-radius: 3px; border:none; background: rgb(43, 48, 59); color: rgb(192, 197, 206); padding: 10px; }"
+                         "QScrollBar:vertical { background: rgb(43, 48, 59); width: 12px; margin: 0px; }"
+                         "QScrollBar::handle:vertical { background-color: rgb(61, 70, 79); border-radius: 3px; min-height: 20px; margin: 0px 2px 0px 2px; }"
+                         "QScrollBar::add-line:vertical { background: none; height: 0px; subcontrol-position: right; subcontrol-origin: margin; }"
+                         "QScrollBar::sub-line:vertical { background: none; height: 0px; subcontrol-position: left; subcontrol-origin: margin; }"
+                         "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }");
+
+    this->setStyleSheet("background: rgb(245, 246, 248);");
 
 }

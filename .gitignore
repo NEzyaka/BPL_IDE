@@ -50,5 +50,4 @@ Makefile*
 *.bpl
 *.trnp
 *.exe
-/release/
-/debug/
+/bin/

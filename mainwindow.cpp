@@ -76,6 +76,9 @@ void MainWindow::createMenu()
     menuBar = new MenuBar(this);
     this->setMenuBar(menuBar);
 
+    Widget* widget = menuBar;
+    widget->setupScheme();
+
     connect(menuBar, SIGNAL(open()), SLOT(open()));
     connect(menuBar, SIGNAL(save()), SLOT(save()));
     connect(menuBar, SIGNAL(saveAs()), SLOT(saveAs()));
@@ -130,10 +133,18 @@ void MainWindow::retranslateStrings()
 {
     if(editorSetuped)
     {
+        Widget* widget;
+
+        widget = menuBar;
         menuBar->clear();
-        menuBar->retranslateStrings();
-        editor->retranslateStrings();
-        toolBar->retranslateStrings();
+        this->createMenu();
+        widget->retranslateStrings();
+
+        widget = editor;
+        widget->retranslateStrings();
+
+        widget = toolBar;
+        widget->retranslateStrings();
     }
 }
 
@@ -167,12 +178,11 @@ void MainWindow::setupEditor() //setting up editor
     createMenu();
     createToolBar();
 
-    editor = new CodeEditor;
+    editor = new CodeEditor(this);
     editorSetuped = true;
     highlighter = new Highlighter(editor->document());
 
     this->setCentralWidget(editor);
-    setupTheme();
 
     delete logoLabel; //clearing RAM after logo
     delete logoLayout;
@@ -184,6 +194,8 @@ void MainWindow::setupEditor() //setting up editor
     statBar->addWidget(columnLine);
     this->setStatusBar(statBar);
 
+    setupTheme();
+
     connect(editor, SIGNAL(cursorPositionChanged()), this, SLOT(textChanged()));
 
     writeSessionLog("Editor was successfully setuped");
@@ -192,10 +204,20 @@ void MainWindow::setupEditor() //setting up editor
 
 void MainWindow::setupTheme() //theme
 {
-    editor->setupScheme();
+    Widget* widget;
 
-    qApp->setStyleSheet("QStatusBar { background: rgb(43, 48, 59); }"
-                        "QStatusBar::item { border: none; padding: 3px 3px 3px 3px; }");
+    widget = menuBar;
+    widget->setupScheme();
+
+    widget = editor;
+    widget->setupScheme();
+
+    widget = toolBar;
+    widget->setupScheme();
+
+    statBar->setStyleSheet("QStatusBar { background: rgb(43, 48, 59); }"
+                           "QStatusBar::item { border: none; padding: 3px 3px 3px 3px; }"
+                           "QLabel { font: 12pt; font-family: Consolas; color: rgb(84, 96, 107); }");
 
     writeSessionLog("Fitted theme");
 }
@@ -278,6 +300,66 @@ void MainWindow::clearSessionLog() //cleaning session-log
 
 void MainWindow::configsRead() //configs reading
 {
+    try
+    {
+        //reading completer model
+        QFile* completerModelFromFile = new QFile("configs/completerModel.config");
+        if(!completerModelFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        completerModelFromFile->close();
+        delete completerModelFromFile;
+
+        //reading blocks highlighting list
+        QFile* blocksFromFile = new QFile("configs/highlight/blocks.config");
+        if(!blocksFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        blocksFromFile->close();
+        delete blocksFromFile;
+
+        //reading conditions highlighting list
+        QFile* conditionsFromFile = new QFile("configs/highlight/conditions.config");
+        if(!conditionsFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        conditionsFromFile->close();
+        delete conditionsFromFile;
+
+        //reading dataTypes highlighting list
+        QFile* dataTypesFromFile = new QFile("configs/highlight/dataTypes.config");
+        if(!dataTypesFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        dataTypesFromFile->close();
+        delete dataTypesFromFile;
+
+        //reading operators highlighting list
+        QFile* operatorsFromFile = new QFile("configs/highlight/operators.config");
+        if(!operatorsFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        operatorsFromFile->close();
+        delete operatorsFromFile;
+
+        //reading values highlighting list
+        QFile* valuesFromFile = new QFile("configs/highlight/values.config");
+        if(!valuesFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        valuesFromFile->close();
+        delete valuesFromFile;
+
+        QFile* languageFromFile = new QFile("configs/languageConfig.config");
+        if(!languageFromFile->open(QFile::ReadOnly | QFile::Text))
+            throw 1;
+        else
+            setLanguage(languageFromFile->readAll());
+        languageFromFile->close();
+        delete languageFromFile;
+
+        writeSessionLog("Configuration files were successfully readed");
+    }
+    catch(...)
+    {
+        QMessageBox::warning(this, "Turnip Editor", tr("Error of reding configuration file, program may be crashed!"));
+        writeSessionLog("Error of reading configs!");
+    }
+
     //reading interpreter path config
     QFile* interpreterPathFromFile = new QFile("configs/compilerConfig.config");
 
@@ -349,66 +431,6 @@ void MainWindow::configsRead() //configs reading
 
     interpreterPathFromFile->close();
     delete interpreterPathFromFile;
-
-    try
-    {
-        //reading completer model
-        QFile* completerModelFromFile = new QFile("configs/completerModel.config");
-        if(!completerModelFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        completerModelFromFile->close();
-        delete completerModelFromFile;
-
-        //reading blocks highlighting list
-        QFile* blocksFromFile = new QFile("configs/highlight/blocks.config");
-        if(!blocksFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        blocksFromFile->close();
-        delete blocksFromFile;
-
-        //reading conditions highlighting list
-        QFile* conditionsFromFile = new QFile("configs/highlight/conditions.config");
-        if(!conditionsFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        conditionsFromFile->close();
-        delete conditionsFromFile;
-
-        //reading dataTypes highlighting list
-        QFile* dataTypesFromFile = new QFile("configs/highlight/dataTypes.config");
-        if(!dataTypesFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        dataTypesFromFile->close();
-        delete dataTypesFromFile;
-
-        //reading operators highlighting list
-        QFile* operatorsFromFile = new QFile("configs/highlight/operators.config");
-        if(!operatorsFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        operatorsFromFile->close();
-        delete operatorsFromFile;
-
-        //reading values highlighting list
-        QFile* valuesFromFile = new QFile("configs/highlight/values.config");
-        if(!valuesFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        valuesFromFile->close();
-        delete valuesFromFile;
-
-        QFile* languageFromFile = new QFile("configs/languageConfig.config");
-        if(!languageFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        else
-            setLanguage(languageFromFile->readAll());
-        languageFromFile->close();
-        delete languageFromFile;
-
-        writeSessionLog("Configuration files were successfully readed");
-    }
-    catch(...)
-    {
-        QMessageBox::warning(this, "Turnip Editor", tr("Error of reding configuration file, program may be crashed!"));
-        writeSessionLog("Error of reading configs!");
-    }
 }
 
 QString MainWindow::readFromFile(QString filePath)
@@ -719,7 +741,6 @@ void MainWindow::textChanged()
 {
     QTextCursor* lineAndColumn = new QTextCursor(editor->textCursor());
     columnLine->setText(QString::number(lineAndColumn->blockNumber()+1) + ":" + QString::number(lineAndColumn->columnNumber()+1));
-    columnLine->setStyleSheet("font: 12pt; font-family: Consolas; color: rgb(84, 96, 107)");
     delete lineAndColumn;
 }
 

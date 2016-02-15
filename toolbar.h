@@ -28,12 +28,13 @@
 #include <QToolBar>
 #include <QAction>
 
+#include "widget.h"
 
-class ToolBar : public QToolBar
+class ToolBar : public QToolBar, public Widget
 {
     Q_OBJECT
 public:
-    explicit ToolBar(QWidget *parent = 0);
+    ToolBar(QWidget *parent = 0);
     void retranslateStrings();
     void setupScheme();
 

@@ -27,8 +27,9 @@
 #include <QMenuBar>
 #include <QActionGroup>
 
+#include "widget.h"
 
-class MenuBar : public QMenuBar
+class MenuBar : public QMenuBar, public Widget
 {
     Q_OBJECT
 public:
@@ -37,6 +38,7 @@ public:
     bool getFullscrState() { return fullscrAction->isChecked(); }
     void setFullscrState(bool state) { fullscrAction->setChecked(state); }
     void setLanguage(QString lang);
+    void setupScheme();
 
 signals:
     void open();
@@ -60,7 +62,7 @@ signals:
 private:
     void createActions();
     void createMenus();
-    void setupScheme();
+
 
     QAction* openAction;
     QAction* saveAction;

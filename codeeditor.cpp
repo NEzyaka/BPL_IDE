@@ -73,7 +73,11 @@ void CodeEditor::setupScheme()
                         "QScrollBar::handle:vertical { background-color: rgb(61, 70, 79); border-radius: 3px; min-height: 20px; margin: 0px 2px 0px 2px; }"
                         "QScrollBar::add-line:vertical { background: none; height: 0px; subcontrol-position: right; subcontrol-origin: margin; }"
                         "QScrollBar::sub-line:vertical { background: none; height: 0px; subcontrol-position: left; subcontrol-origin: margin; }"
-                        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }");
+                        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }"
+                        "QMenu { background-color: rgb(245, 246, 248); border: rgb(245, 246, 248); margin: 3px; }"
+                        "QMenu::item { background-color: transparent; padding: 3px 5px 5px 25px; border-radius: 2px; }"
+                        "QMenu::item:selected { background-color: rgb(225, 226, 228); color: rgb(39, 50, 56); }"
+                        "QMenu::separator { background: rgb(133, 143, 153); height: 1 px; }");
 }
 
 void CodeEditor::setupFont()

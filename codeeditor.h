@@ -28,6 +28,8 @@
 #include <QPlainTextEdit>
 #include <QObject>
 
+#include "widget.h"
+
 QT_BEGIN_NAMESPACE
 class QPaintEvent;
 class QResizeEvent;
@@ -39,7 +41,7 @@ QT_END_NAMESPACE
 class QCompleter;
 class LineNumberArea;
 
-class CodeEditor : public QPlainTextEdit
+class CodeEditor : public QPlainTextEdit, public Widget
 {
     Q_OBJECT
 
