@@ -47,22 +47,26 @@ void StartMenuBar::setupScheme()
 void StartMenuBar::createActions()
 {
     openAction = new QAction(this);
+    newFileAction = new QAction(this);
     exitAction = new QAction(this);
     manualAction = new QAction(this);
     aboutAction = new QAction(this);
     aboutQtAction = new QAction(this);
 
     openAction->setIcon(QPixmap(":icons/open.png")); //setting up icons
+    newFileAction->setIcon(QPixmap(":icons/new.png"));
     exitAction->setIcon(QPixmap(":icons/exit.png"));
     manualAction->setIcon(QPixmap(":icons/help.png"));
     aboutAction->setIcon(QPixmap(":icons/about.png"));
     aboutQtAction->setIcon(QPixmap(":icons/qt.png"));
 
     openAction->setShortcut(Qt::CTRL + Qt::Key_O); //setting up shortcuts
+    newFileAction->setShortcut(Qt::CTRL + Qt::Key_N);
     exitAction->setShortcut(Qt::CTRL + Qt::Key_W);
     manualAction->setShortcut(Qt::Key_F1);
 
     connect(openAction, SIGNAL(triggered()), SIGNAL(open()));
+    connect(newFileAction, SIGNAL(triggered()), SIGNAL(newFile()));
     connect(exitAction, SIGNAL(triggered()), SIGNAL(exit()));
     connect(aboutAction, SIGNAL(triggered()), SIGNAL(about()));
     connect(aboutQtAction, SIGNAL(triggered()), SIGNAL(aboutQt()));
@@ -74,6 +78,7 @@ void StartMenuBar::createMenus()
 {
     startFileMenu = new QMenu(this);
     startFileMenu->addAction(openAction);
+    startFileMenu->addAction(newFileAction);
     startFileMenu->addSeparator();
     startFileMenu->addAction(exitAction);
 
@@ -91,6 +96,7 @@ void StartMenuBar::retranslateStrings()
     this->addMenu(helpMenu);
 
     openAction->setText(tr("Open"));
+    newFileAction->setText(tr("New File..."));
     exitAction->setText(tr("Exit"));
     aboutAction->setText(tr("About"));
     aboutQtAction->setText(tr("About Qt"));

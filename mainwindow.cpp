@@ -38,8 +38,10 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-    clearSessionLog();
-    writeSessionLog("Session started");
+    tools = new SubTools;
+
+    tools->clearSessionLog();
+    tools->writeSessionLog("Session started");
 
     qtTranslator = new QTranslator;
     appTranslator = new QTranslator;
@@ -51,16 +53,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setupLogo();
     createStartMenu();
 
-    this->setWindowTitle("Turnip Editor 16.02");
-    this->setWindowIcon(QPixmap(":icons/logo.png"));
+    this->setWindowTitle("Turnip Editor 16.03 Preview");
+    this->setWindowIcon(QIcon(":icons/logo.png"));
     this->setMinimumSize(480, 270);
     this->resize(800, 600);
+
+    beginSessionTime = tools->currentTimeDate();
 }
 
 MainWindow::~MainWindow()
 {
-    writeSessionLog("Session finished");
-    writeLog();
+    tools->writeSessionLog("Session finished");
+    tools->writeLog(beginSessionTime, tools->currentTimeDate());
 }
 
 void MainWindow::changeEvent(QEvent *event)
@@ -106,6 +110,7 @@ void MainWindow::createStartMenu()
     this->setMenuBar(startMenuBar);
 
     connect(startMenuBar, SIGNAL(open()), SLOT(open()));
+    connect(startMenuBar, SIGNAL(newFile()), SLOT(newFile()));
     connect(startMenuBar, SIGNAL(exit()), SLOT(exit()));
     connect(startMenuBar, SIGNAL(about()), SLOT(about()));
     connect(startMenuBar, SIGNAL(aboutQt()), SLOT(aboutQt()));
@@ -170,7 +175,7 @@ void MainWindow::setupLogo() //setting up logo
 
     setCentralWidget(backgroundBox);
 
-    writeSessionLog("Logo was successfully setuped");
+    tools->writeSessionLog("Logo was successfully setuped");
 }
 
 void MainWindow::setupEditor() //setting up editor
@@ -198,7 +203,7 @@ void MainWindow::setupEditor() //setting up editor
 
     connect(editor, SIGNAL(cursorPositionChanged()), this, SLOT(textChanged()));
 
-    writeSessionLog("Editor was successfully setuped");
+    tools->writeSessionLog("Editor was successfully setuped");
 
 }
 
@@ -219,245 +224,23 @@ void MainWindow::setupTheme() //theme
                            "QStatusBar::item { border: none; padding: 3px 3px 3px 3px; }"
                            "QLabel { font: 12pt; font-family: Consolas; color: rgb(84, 96, 107); }");
 
-    writeSessionLog("Fitted theme");
-}
-
-bool MainWindow::fileSaved() //checking saving of file
-{
-    bool isSaved = false;
-
-    if(readFromFile(fileName) == editor->toPlainText())
-    {
-        isSaved = true;
-        writeSessionLog("Successful checking of saving " + fileName);
-    }
-
-    return isSaved;
-}
-
-QString MainWindow::currentTimeDate() //getting current date and time for writing logs
-{
-    return QDate::currentDate().toString("dd.MM.yyyy") + " " + QTime::currentTime().toString("hh:mm:ss");
-}
-
-void MainWindow::writeLog() //appending global log
-{
-    QFile* file = new QFile("log.log");
-
-    if(!file->open(QIODevice::Append))
-    {
-        QMessageBox::critical(this, "Turnip Editor", tr("Error of writing to log!"));
-        return;
-    }
-    else
-    {
-        QTextStream* stream = new QTextStream(&*file);
-        *stream << "\n" << "Session witch ended at " << currentTimeDate() << "\n" << readFromFile("sessionLog.log");
-        stream->flush();
-        file->close();
-        delete file;
-        delete stream;
-    }
-}
-
-void MainWindow::writeSessionLog(QString message) //writing session-log
-{
-    QFile* file = new QFile("sessionLog.log");
-    if(!file->open(QIODevice::Append))
-    {
-        QMessageBox::critical(this, "Turnip Editor", tr("Error of writing to log!"));
-        return;
-    }
-    else
-    {
-        QTextStream* stream = new QTextStream(&*file);
-        *stream << currentTimeDate() << " - " << message << "\n";
-        stream->flush();
-        file->close();
-        delete file;
-        delete stream;
-    }
-}
-
-void MainWindow::clearSessionLog() //cleaning session-log
-{
-    QFile* file = new QFile("sessionLog.log");
-    if(!file->open(QIODevice::WriteOnly))
-    {
-        QMessageBox::critical(this, "Turnip Editor", tr("Error of writing to log!"));
-        return;
-    }
-    else
-    {
-        QTextStream* stream = new QTextStream(&*file);
-        *stream << "";
-        stream->flush();
-        file->close();
-        delete file;
-        delete stream;
-    }
+    tools->writeSessionLog("Fitted theme");
 }
 
 void MainWindow::configsRead() //configs reading
 {
-    try
-    {
-        //reading completer model
-        QFile* completerModelFromFile = new QFile("configs/completerModel.config");
-        if(!completerModelFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        completerModelFromFile->close();
-        delete completerModelFromFile;
+    setLanguage(tools->getLanguage());
+    //tools->retranslateStrings();
 
-        //reading blocks highlighting list
-        QFile* blocksFromFile = new QFile("configs/highlight/blocks.config");
-        if(!blocksFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        blocksFromFile->close();
-        delete blocksFromFile;
-
-        //reading conditions highlighting list
-        QFile* conditionsFromFile = new QFile("configs/highlight/conditions.config");
-        if(!conditionsFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        conditionsFromFile->close();
-        delete conditionsFromFile;
-
-        //reading dataTypes highlighting list
-        QFile* dataTypesFromFile = new QFile("configs/highlight/dataTypes.config");
-        if(!dataTypesFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        dataTypesFromFile->close();
-        delete dataTypesFromFile;
-
-        //reading operators highlighting list
-        QFile* operatorsFromFile = new QFile("configs/highlight/operators.config");
-        if(!operatorsFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        operatorsFromFile->close();
-        delete operatorsFromFile;
-
-        //reading values highlighting list
-        QFile* valuesFromFile = new QFile("configs/highlight/values.config");
-        if(!valuesFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        valuesFromFile->close();
-        delete valuesFromFile;
-
-        QFile* languageFromFile = new QFile("configs/languageConfig.config");
-        if(!languageFromFile->open(QFile::ReadOnly | QFile::Text))
-            throw 1;
-        else
-            setLanguage(languageFromFile->readAll());
-        languageFromFile->close();
-        delete languageFromFile;
-
-        writeSessionLog("Configuration files were successfully readed");
-    }
-    catch(...)
+    if(!tools->configsExists())
     {
         QMessageBox::warning(this, "Turnip Editor", tr("Error of reding configuration file, program may be crashed!"));
-        writeSessionLog("Error of reading configs!");
+        tools->writeSessionLog("Error of reading configs!");
     }
+    else
+        tools->writeSessionLog("Configuration files were successfully readed");
 
-    //reading interpreter path config
-    QFile* interpreterPathFromFile = new QFile("configs/compilerConfig.config");
-
-    QString* compilerpath = new QString (readFromFile("configs/compilerConfig.config"));
-    QFileInfo* interpr = new QFileInfo(*compilerpath);
-
-    if(compilerpath->isEmpty() || !interpr->isExecutable())
-    {
-        delete interpr;
-        QFileInfo* autoInterpreter = new QFileInfo("Turnip-Runner.exe");
-        if(autoInterpreter->isExecutable())
-        {
-            QMessageBox* autoDetecox = new QMessageBox;
-            autoDetecox->setText(tr("<b>Turnip Editor automatically found Turnip Runner<br> in ") + QString(autoInterpreter->absolutePath()) + "</b>");
-            autoDetecox->setInformativeText(tr("Do you want to use this interpreter?"));
-            autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
-            autoDetecox->setDefaultButton(QMessageBox::Yes);
-            int* ret = new int(autoDetecox->exec());
-            delete autoDetecox;
-            switch(*ret)
-            {
-            case QMessageBox::Yes:
-                compilerPath = autoInterpreter->absoluteFilePath();
-                break;
-            case QMessageBox::Cancel:
-                chooseInterpreter();
-                break;
-            }
-            delete ret;
-        }
-        else
-        {
-            QString* searchpath = new QString("C:\\");
-            QDirIterator* iterator = new QDirIterator(*searchpath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
-            while(iterator->hasNext())
-            {
-                iterator->next();
-                if(iterator->fileInfo().absoluteFilePath().contains("Turnip-Runner.exe", Qt::CaseInsensitive))
-                {
-                    QMessageBox* autoDetecox = new QMessageBox;
-                    autoDetecox->setText(tr("<b>Turnip Editor automatically found Turnip Runner<br> in ") + QString(iterator->fileInfo().absolutePath() + "</b>"));
-                    autoDetecox->setInformativeText(tr("Do you want to use this interpreter?"));
-                    autoDetecox->setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
-                    autoDetecox->setDefaultButton(QMessageBox::Yes);
-                    int* ret = new int(autoDetecox->exec());
-                    delete autoDetecox;
-                    switch(*ret)
-                    {
-                    case QMessageBox::Yes:
-                        compilerPath = iterator->fileInfo().absoluteFilePath();
-                        break;
-                    case QMessageBox::Cancel:
-                        chooseInterpreter();
-                        break;
-                    }
-                    delete ret;
-                    break;
-                }
-            }
-            delete searchpath;
-            delete iterator;
-            delete autoInterpreter;
-        }
-    }
-    else compilerPath = *compilerpath;
-    delete compilerpath;
-
-    writeToFile("configs/compilerConfig.config", compilerPath);
-
-    interpreterPathFromFile->close();
-    delete interpreterPathFromFile;
-}
-
-QString MainWindow::readFromFile(QString filePath)
-{
-    QString data = "";
-
-    QFile* file = new QFile(filePath);
-    if(file->open(QFile::ReadOnly | QFile::Text))
-        data = file->readAll();
-    file->close();
-    delete file;
-
-    return data;
-}
-
-void MainWindow::writeToFile(QString filePath, QString data)
-{
-    QFile* file = new QFile(filePath);
-    if(file->open(QIODevice::WriteOnly))
-    {
-        QTextStream* stream = new QTextStream(&*file);
-        *stream << data;
-        stream->flush();
-        file->close();
-        delete file;
-        delete stream;
-    }
+    interpreterPath = tools->getInterpreterPath();
 }
 
 void MainWindow::setLanguage(QString lang)
@@ -490,19 +273,49 @@ void MainWindow::setLanguage(QString lang)
 
 void MainWindow::open()
 {
-    fileName = QFileDialog::getOpenFileName(this, tr("Open"), "", tr("Turnip source code (*.trnp *.txt *.ext)"));
+    fileName = QFileDialog::getOpenFileName(this, tr("Open"), "", tr("Turnip source code (*.txt *.trnp *.ext)"));
 
     if(fileName != "")
     {
         if(!editorSetuped)
             setupEditor();
 
-        editor->setPlainText(readFromFile(fileName));
+        editor->setPlainText(tools->readFromFile(fileName));
         fileIsOpen = true;
 
-        this->setWindowTitle(fileName + " - Turnip Editor 16.02");
+        this->setWindowTitle(fileName + " - Turnip Editor 16.03 Preview");
 
-        writeSessionLog(fileName + " was successfully opened");
+        tools->writeSessionLog(fileName + " was successfully opened");
+    }
+}
+
+void MainWindow::newFile()
+{
+    fileName = QFileDialog::getSaveFileName(this, tr("New File..."), "", tr("Turnip source code (*.txt);;Turnip source code (*.trnp);;Turnip source code (*.ext)"));
+
+    if(fileName != "")
+    {
+        tools->writeToFile(fileName, tools->readFromFile("configs/newFileDefault.config"));
+
+        if(tools->fileExits(fileName))
+        {
+            tools->writeSessionLog(fileName + " was successfully created");
+
+            if(!editorSetuped)
+                setupEditor();
+
+            editor->setPlainText(tools->readFromFile(fileName));
+            fileIsOpen = true;
+
+            this->setWindowTitle(fileName + " - Turnip Editor 16.03 Preview");
+
+            tools->writeSessionLog(fileName + " was successfully opened");
+        }
+        else
+        {
+            QMessageBox::critical(this, "Turnip Editor", tr("File cannot be saved!"));
+            tools->writeSessionLog("Error of creating " + fileName);
+        }
     }
 }
 
@@ -510,32 +323,32 @@ void MainWindow::save()
 {
     if(fileName != "" && fileIsOpen == true)
     {
-        writeToFile(fileName, editor->toPlainText());
+        tools->writeToFile(fileName, editor->toPlainText());
 
-        if(fileSaved())
-            writeSessionLog(fileName + " was successfully saved");
+        if(tools->fileSaved(fileName, editor->toPlainText()))
+            tools->writeSessionLog(fileName + " was successfully saved");
         else
         {
             QMessageBox::critical(this, "Turnip Editor", tr("File cannot be saved!"));
-            writeSessionLog("Error of saving " + fileName);
+            tools->writeSessionLog("Error of saving " + fileName);
         }
     }
 }
 
 void MainWindow::saveAs()
 {
-    fileName = QFileDialog::getSaveFileName(this, tr("Save As..."), "", tr("Turnip source code (*.trnp *.txt *.ext)"));
+    fileName = QFileDialog::getSaveFileName(this, tr("Save As..."), "", tr("Turnip source code (*.txt);;Turnip source code (*.trnp);;Turnip source code (*.ext)"));
 
     if(fileName != "" && fileIsOpen == true)
     {
-        writeToFile(fileName, editor->toPlainText());
+        tools->writeToFile(fileName, editor->toPlainText());
 
-        if(fileSaved())
-            writeSessionLog(fileName + " was successfully saved");
+        if(tools->fileSaved(fileName, editor->toPlainText()))
+            tools->writeSessionLog(fileName + " was successfully saved");
         else
         {
             QMessageBox::critical(this, "Turnip Editor", tr("File cannot be saved!"));
-            writeSessionLog("Error of saving " + fileName);
+            tools->writeSessionLog("Error of saving " + fileName);
         }
     }
 }
@@ -553,7 +366,7 @@ void MainWindow::exit()
     switch(*q)
     {
     case QMessageBox::Yes:
-        if(fileIsOpen == true && fileSaved() == false)
+        if(fileIsOpen && !tools->fileSaved(fileName, editor->toPlainText()))
         {
             QMessageBox* save = new QMessageBox(this);
             save->setText(tr("File ") + fileName + tr(" has been changed"));
@@ -614,21 +427,21 @@ void MainWindow::interpret()
 {
     save();
 
-    if(fileSaved())
+    if(tools->fileSaved(fileName, editor->toPlainText()))
     {
-        if(!compilerPath.isEmpty())
+        if(!interpreterPath.isEmpty())
         {
-            QString* bufPath = new QString(compilerPath);
+            QString* bufPath = new QString(interpreterPath);
             QString* arg = new QString(bufPath->append(" " + fileName));
             delete bufPath;
             system(arg->toStdString().c_str());
             delete arg;
-            writeSessionLog(fileName + " was successfully interpreted");
+            tools->writeSessionLog(fileName + " was successfully interpreted");
         }
         else
         {
             QMessageBox::critical(this, "Turnip Editor", tr("Turnip Runner not found or is invalid. Please, choose the correct interpreter."));
-            writeSessionLog("Error of interpreting " + fileName);
+            tools->writeSessionLog("Error of interpreting " + fileName);
             chooseInterpreter();
             interpret();
         }
@@ -643,25 +456,19 @@ void MainWindow::fullscr()
     {
         menuBar->setFullscrState(true);
         this->showFullScreen();
-        writeSessionLog("Fullscreen mode switched on");
+        tools->writeSessionLog("Fullscreen mode switched on");
     }
     else if(!menuBar->getFullscrState())
     {
         menuBar->setFullscrState(false);
         this->showNormal();
-        writeSessionLog("Fullscreen mode switched off");
+        tools->writeSessionLog("Fullscreen mode switched off");
     }
 }
 
 void MainWindow::chooseInterpreter()
 {
-    if(editorSetuped == false)
-        while(compilerPath == "")
-            compilerPath = QFileDialog::getOpenFileName(this, tr("Choose the interpreter"), "Turnip-Runner");
-    else compilerPath = QFileDialog::getOpenFileName(this, tr("Choose the interpreter"), "Turnip-Runner");
-
-    writeToFile("configs/compilerConfig.config", compilerPath);
-    writeSessionLog("Choosed Turnip Runner in " + compilerPath);
+    interpreterPath = tools->chooseInterpreter(editorSetuped);
 }
 
 void MainWindow::setLanguage(QAction *language)
@@ -674,50 +481,50 @@ void MainWindow::setLanguage(QAction *language)
         appTranslator->load(":translations/russian.qm");
         qApp->installTranslator(appTranslator);
         retranslateStrings();
-        writeToFile("configs/languageConfig.config", "Russian");
+        tools->writeToFile("configs/languageConfig.config", "Russian");
     }
     if(language->text() == tr("English"))
     {
         appTranslator->load(":translations/english.qm");
         qApp->installTranslator(appTranslator);
         retranslateStrings();
-        writeToFile("configs/languageConfig.config", "English");
+        tools->writeToFile("configs/languageConfig.config", "English");
     }
     if(language->text() == tr("German"))
     {
         appTranslator->load(":translations/german.qm");
         qApp->installTranslator(appTranslator);
         retranslateStrings();
-        writeToFile("configs/languageConfig.config", "German");
+        tools->writeToFile("configs/languageConfig.config", "German");
     }
 }
 
 void MainWindow::about()
 {
     QString aboutText;
-    aboutText.insert(0,  "<h1>Turnip Editor 16.02</h1>"
+    aboutText.insert(0,  "<h1>Turnip Editor 16.03 Preview</h1>"
                          "<h4>" + tr("Next generation of Turnip Editor.") + "</h4>" +
-                         "<h3>" + tr("Simple IDE for simple programming language.") + "</h3>"
-                         "<p>" + tr("Welcome to the Turnip Editor! Work with Turnip requiredn't some "
-                                    "experience in programming, Turnip Editor is perfect for beginners. More "
-                                    "information about Turnip and features of Turnip Editor you can look in "
-                                    "Manual (F1).") + "</p>" +
-                         "<p>" + tr("Turnip Editor is free software: you can redistribute it and/or modify it "
-                                    "under the terms of the GNU General Public License as published by the "
-                                    "Free Software Foundation, either version 3 of the License, or (at your "
-                                    "option) any later version.") + "</p>" +
-                         "<p>" + tr("Turnip Editor is distributed in the hope that it will be useful, but WITHOUT "
-                                    "ANY WARRANTY; without even the implied warranty of "
-                                    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the "
-                                    "GNU General Public License for more details.") + "</p>" +
-                         "<p>" + tr("You should have received a copy of the GNU General Public License along "
-                                    "with Turnip Editor. If not, see <a href = 'http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>.") +
+                     "<h3>" + tr("Simple IDE for simple programming language.") + "</h3>"
+                                                                                  "<p>" + tr("Welcome to the Turnip Editor! Work with Turnip requiredn't some "
+                                                                                             "experience in programming, Turnip Editor is perfect for beginners. More "
+                                                                                             "information about Turnip and features of Turnip Editor you can look in "
+                                                                                             "Manual (F1).") + "</p>" +
+                     "<p>" + tr("Turnip Editor is free software: you can redistribute it and/or modify it "
+                                "under the terms of the GNU General Public License as published by the "
+                                "Free Software Foundation, either version 3 of the License, or (at your "
+                                "option) any later version.") + "</p>" +
+                     "<p>" + tr("Turnip Editor is distributed in the hope that it will be useful, but WITHOUT "
+                                "ANY WARRANTY; without even the implied warranty of "
+                                "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the "
+                                "GNU General Public License for more details.") + "</p>" +
+                     "<p>" + tr("You should have received a copy of the GNU General Public License along "
+                                "with Turnip Editor. If not, see <a href = 'http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>.") +
 
-                         "<p>" + tr("More information at ") + "<a href = 'https://github.com/NEzyaka/Turnip-Editor'>https://github.com/NEzyaka/Turnip-Editor</a></p>"
+                     "<p>" + tr("More information at ") + "<a href = 'https://github.com/NEzyaka/Turnip-Editor'>https://github.com/NEzyaka/Turnip-Editor</a></p>"
 
-                         "<p><b>" + tr("Found a bug or just have a question? Write ") + "<a href='mailto:nekit2002mir@yandex.ru?subject=Message to the Turnip Editor developer' title='Message to the Turnip Editor developer'>" + tr("here") + "</a>.</b></p>");
+                                                          "<p><b>" + tr("Found a bug or just have a question? Write ") + "<a href='mailto:nekit2002mir@yandex.ru?subject=Message to the Turnip Editor developer' title='Message to the Turnip Editor developer'>" + tr("here") + "</a>.</b></p>");
 
-                         "<p>Copyright (С) 2015-2016 " + tr("Nikita Mironov") + ".</p>";
+    "<p>Copyright (С) 2015-2016 " + tr("Nikita Mironov") + ".</p>";
 
 
     QMessageBox::about(this, tr("About"), aboutText);
@@ -742,5 +549,6 @@ void MainWindow::textChanged()
     QTextCursor* lineAndColumn = new QTextCursor(editor->textCursor());
     columnLine->setText(QString::number(lineAndColumn->blockNumber()+1) + ":" + QString::number(lineAndColumn->columnNumber()+1));
     delete lineAndColumn;
+    tools->fileSaved(fileName, editor->toPlainText()) ? this->setWindowTitle(fileName + "* - Turnip Editor 16.03 Preview") : this->setWindowTitle(fileName + " - Turnip Editor 16.03 Preview");
 }
 

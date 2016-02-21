@@ -40,6 +40,7 @@
 #include "manualviewer.h"
 #include "codeeditor.h"
 #include "highlighter.h"
+#include "subtools.h"
 
 class MainWindow : public QMainWindow
 {
@@ -54,6 +55,7 @@ private:
     QTranslator* qtTranslator;
     QTranslator* appTranslator;
     void setLanguage(QString language);
+    QString currentLang;
 
     MenuBar* menuBar;
     StartMenuBar* startMenuBar;
@@ -68,23 +70,15 @@ private:
 
     void setupEditor();
     void configsRead();
+    QString getInterpreterPath();
     void setupLogo();
-    bool fileSaved();
-    QString currentTimeDate();
-    void writeLog();
-    void writeSessionLog(QString message);
-    void clearSessionLog();
     void setupTheme();
-
-    QString readFromFile(QString filePath);
-    void writeToFile(QString filePath, QString data);
 
     CodeEditor* editor;
     Highlighter* highlighter;
 
     QString fileName;
-    QString compilerPath;
-
+    QString interpreterPath;
     bool fileIsOpen = false;
     bool editorSetuped = false;
 
@@ -93,10 +87,12 @@ private:
     QHBoxLayout* logoLayout1;
     QWidget *backgroundBox;
 
-    QString currentLang;
+    SubTools* tools;
+    QString beginSessionTime;
 
 private slots:
     void open();
+    void newFile();
     void save();
     void saveAs();
     void exit();

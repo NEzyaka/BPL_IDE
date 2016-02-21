@@ -36,6 +36,7 @@ public:
 
 signals:
     void open();
+    void newFile();
     void exit();
     void about();
     void aboutQt();
@@ -47,6 +48,7 @@ private:
     void setupScheme();
 
     QAction* openAction;
+    QAction* newFileAction;
     QAction* exitAction;
     QAction* aboutAction;
     QAction* aboutQtAction;

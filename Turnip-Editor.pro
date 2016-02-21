@@ -35,7 +35,8 @@ SOURCES      += main.cpp\
                 highlighter.cpp \
                 toolbar.cpp \
                 startmenubar.cpp \
-                manualviewer.cpp
+                manualviewer.cpp \
+                subtools.cpp
 
 HEADERS      += mainwindow.h \
                 menubar.h \
@@ -44,7 +45,8 @@ HEADERS      += mainwindow.h \
                 toolbar.h \
                 startmenubar.h \
                 manualviewer.h \
-    widget.h
+                widget.h \
+                subtools.h
 
 TRANSLATIONS += translations/russian.ts \
                 translations/english.ts \
