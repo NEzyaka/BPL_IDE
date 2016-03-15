@@ -54,7 +54,7 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     singleLineCommentFormat.setForeground(QColor(4, 147, 114));
     singleLineCommentFormat.setFontWeight(QFont::Bold);
     singleLineCommentFormat.setFontItalic(true);
-    rule.pattern = QRegExp("//[^\n]*");
+    rule.pattern = QRegExp("@[^\n]*");
     rule.format = singleLineCommentFormat;
     highlightingRules.append(rule);
 
@@ -89,7 +89,6 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     errorsFormat.setBackground(QColor(255, 10, 0));
     errorsFormat.setFontWeight(QFont::Bold);
     QStringList errorsPatterns;
-    errorsPatterns << "\\bprint\\b";
 
     foreach(const QString &pattern, errorsPatterns)
     {

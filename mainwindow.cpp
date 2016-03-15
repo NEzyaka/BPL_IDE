@@ -32,9 +32,9 @@
 #include <QDate>
 #include <QApplication>
 #include <QDirIterator>
-#include <QDialog>
 #include <QTabWidget>
 #include <QTextCursor>
+#include <QSysInfo>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -69,13 +69,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::changeEvent(QEvent *event)
 {
-    if(event->type() == QEvent::LanguageChange) {
+    if(event->type() == QEvent::LanguageChange)
         retranslateStrings();
-    }
     else QWidget::changeEvent(event);
 }
 
-void MainWindow::createMenu()
+void MainWindow::createMenu() //setting up menubar
 {
     menuBar = new MenuBar(this);
     this->setMenuBar(menuBar);
@@ -104,7 +103,7 @@ void MainWindow::createMenu()
     menuBar->setLanguage(currentLang);
 }
 
-void MainWindow::createStartMenu()
+void MainWindow::createStartMenu() //setting up start menubar
 {
     startMenuBar = new StartMenuBar(this);
     this->setMenuBar(startMenuBar);
@@ -117,7 +116,7 @@ void MainWindow::createStartMenu()
     connect(startMenuBar, SIGNAL(manual()), SLOT(manual()));
 }
 
-void MainWindow::createToolBar()
+void MainWindow::createToolBar() //setting up toolbar
 {
     toolBar = new ToolBar(this);
     this->addToolBar(toolBar);
@@ -134,7 +133,7 @@ void MainWindow::createToolBar()
     connect(toolBar, SIGNAL(interpret()), SLOT(interpret()));
 }
 
-void MainWindow::retranslateStrings()
+void MainWindow::retranslateStrings() //retranslate strings when language changed
 {
     if(editorSetuped)
     {
@@ -142,6 +141,7 @@ void MainWindow::retranslateStrings()
 
         widget = menuBar;
         menuBar->clear();
+        menuBar->setLanguage(currentLang);
         this->createMenu();
         widget->retranslateStrings();
 
@@ -243,35 +243,33 @@ void MainWindow::configsRead() //configs reading
     interpreterPath = tools->getInterpreterPath();
 }
 
-void MainWindow::setLanguage(QString lang)
+void MainWindow::setLanguage(QString lang) //setting up language (start)
 {
-    qtTranslator->load("qt_" + QLocale::system().name(),
-                       QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    qtTranslator->load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     qApp->installTranslator(qtTranslator);
 
-    if(lang == "Russian" || lang == "Rus")
+    if(lang == "Russian")
     {
         appTranslator->load(":translations/russian.qm");
-        qApp->installTranslator(appTranslator);
         currentLang = "Russian";
     }
-    else if(lang == "English" || lang == "Eng")
+    else if(lang == "English")
     {
         appTranslator->load(":translations/english.qm");
-        qApp->installTranslator(appTranslator);
         currentLang = "English";
     }
-    else if((lang == "German" || lang == "Ger")  || (lang == "Deutsch"  || lang == "Deu"))
+    else if(lang == "German")
     {
         appTranslator->load(":translations/german.qm");
-        qApp->installTranslator(appTranslator);
         currentLang = "German";
     }
+
+    qApp->installTranslator(appTranslator);
 }
 
 //slots
 
-void MainWindow::open()
+void MainWindow::open() //open a file
 {
     fileName = QFileDialog::getOpenFileName(this, tr("Open"), "", tr("Turnip source code (*.txt *.trnp *.ext)"));
 
@@ -289,7 +287,7 @@ void MainWindow::open()
     }
 }
 
-void MainWindow::newFile()
+void MainWindow::newFile() //create new file
 {
     fileName = QFileDialog::getSaveFileName(this, tr("New File..."), "", tr("Turnip source code (*.txt);;Turnip source code (*.trnp);;Turnip source code (*.ext)"));
 
@@ -319,7 +317,7 @@ void MainWindow::newFile()
     }
 }
 
-void MainWindow::save()
+void MainWindow::save() //save file
 {
     if(fileName != "" && fileIsOpen == true)
     {
@@ -335,7 +333,7 @@ void MainWindow::save()
     }
 }
 
-void MainWindow::saveAs()
+void MainWindow::saveAs() //special saving of file
 {
     fileName = QFileDialog::getSaveFileName(this, tr("Save As..."), "", tr("Turnip source code (*.txt);;Turnip source code (*.trnp);;Turnip source code (*.ext)"));
 
@@ -353,7 +351,7 @@ void MainWindow::saveAs()
     }
 }
 
-void MainWindow::exit()
+void MainWindow::exit() //exit
 {
     QMessageBox* quit = new QMessageBox(this);
     //quit->setIcon();
@@ -423,7 +421,7 @@ void MainWindow::comment()
     editor->comment();
 }
 
-void MainWindow::interpret()
+void MainWindow::interpret() //interpretation
 {
     save();
 
@@ -431,11 +429,20 @@ void MainWindow::interpret()
     {
         if(!interpreterPath.isEmpty())
         {
-            QString* bufPath = new QString(interpreterPath);
-            QString* arg = new QString(bufPath->append(" " + fileName));
-            delete bufPath;
-            system(arg->toStdString().c_str());
-            delete arg;
+            QString arg;
+            QString bufPath = interpreterPath;
+
+            if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
+                arg = bufPath.append(" " + fileName);
+            else if(QSysInfo::kernelType() == "linux") //if current platform is Linux
+                arg = bufPath.append("xterm -e " + fileName);
+            else if((QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Macintosh
+            { /*Here will be Macintosh instructions*/ }
+            else //if current platform isn't Windows, Linux or Macintosh
+                QMessageBox::information(this, "Turnip Editor", tr("Sorry, but this platform doesn't supported!"));
+
+            system(arg.toStdString().c_str());
+
             tools->writeSessionLog(fileName + " was successfully interpreted");
         }
         else
@@ -447,10 +454,9 @@ void MainWindow::interpret()
         }
     }
     else QMessageBox::critical(this, "Turnip Editor", tr("Error of saving file!"));
-
 }
 
-void MainWindow::fullscr()
+void MainWindow::fullscr() //fullscreen
 {
     if(menuBar->getFullscrState())
     {
@@ -471,7 +477,7 @@ void MainWindow::chooseInterpreter()
     interpreterPath = tools->chooseInterpreter(editorSetuped);
 }
 
-void MainWindow::setLanguage(QAction *language)
+void MainWindow::setLanguage(QAction *language) //setting up language
 {
     qtTranslator->load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     qApp->installTranslator(qtTranslator);
@@ -479,24 +485,24 @@ void MainWindow::setLanguage(QAction *language)
     if(language->text() == tr("Russian"))
     {
         appTranslator->load(":translations/russian.qm");
-        qApp->installTranslator(appTranslator);
-        retranslateStrings();
         tools->writeToFile("configs/languageConfig.config", "Russian");
+        currentLang = "Russian";
     }
-    if(language->text() == tr("English"))
+    else if(language->text() == tr("English"))
     {
         appTranslator->load(":translations/english.qm");
-        qApp->installTranslator(appTranslator);
-        retranslateStrings();
         tools->writeToFile("configs/languageConfig.config", "English");
+        currentLang = "English";
     }
-    if(language->text() == tr("German"))
+    else if(language->text() == tr("German"))
     {
         appTranslator->load(":translations/german.qm");
-        qApp->installTranslator(appTranslator);
-        retranslateStrings();
         tools->writeToFile("configs/languageConfig.config", "German");
+        currentLang = "German";
     }
+
+    qApp->installTranslator(appTranslator);
+    retranslateStrings();
 }
 
 void MainWindow::about()
@@ -530,12 +536,12 @@ void MainWindow::about()
     QMessageBox::about(this, tr("About"), aboutText);
 }
 
-void MainWindow::aboutQt()
+void MainWindow::aboutQt() //about Qt
 {
     qApp->aboutQt();
 }
 
-void MainWindow::manual()
+void MainWindow::manual() //view manual
 {
     ManualViewer* viewer = new ManualViewer;
     viewer->show();
@@ -544,7 +550,7 @@ void MainWindow::manual()
         delete viewer;
 }
 
-void MainWindow::textChanged()
+void MainWindow::textChanged() //if text is changed
 {
     QTextCursor* lineAndColumn = new QTextCursor(editor->textCursor());
     columnLine->setText(QString::number(lineAndColumn->blockNumber()+1) + ":" + QString::number(lineAndColumn->columnNumber()+1));
