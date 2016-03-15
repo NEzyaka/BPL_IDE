@@ -435,7 +435,7 @@ void MainWindow::interpret() //interpretation
             if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
                 arg = bufPath.append(" " + fileName);
             else if(QSysInfo::kernelType() == "linux") //if current platform is Linux
-                arg = bufPath.append("xterm -e " + fileName);
+                arg = bufPath.append(" xterm -e " + fileName);
             else if((QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Macintosh
             { /*Here will be Macintosh instructions*/ }
             else //if current platform isn't Windows, Linux or Macintosh

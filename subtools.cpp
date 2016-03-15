@@ -9,6 +9,7 @@
 #include <QDirIterator>
 #include <QFileDialog>
 #include <QIcon>
+#include <QSysInfo>
 
 SubTools::SubTools()
 {
@@ -137,7 +138,15 @@ QString SubTools::getInterpreterPath()
     if(interpreterpath->isEmpty() || !interpr->isExecutable())
     {
         delete interpr;
-        QFileInfo* autoInterpreter = new QFileInfo("Turnip-Runner.exe");
+        QFileInfo* autoInterpreter;
+
+        if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
+            autoInterpreter = new QFileInfo("Turnip-Runner.exe");
+        else if(QSysInfo::kernelType() == "linux") //if current platform is Linux
+            autoInterpreter = new QFileInfo("Turnip-Runner.run");
+        else if((QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Macintosh
+        { /*Here will be Macintosh executable file format*/ }
+
         if(autoInterpreter->isExecutable())
         {
             QMessageBox* autoDetectBox = new QMessageBox;
@@ -161,8 +170,14 @@ QString SubTools::getInterpreterPath()
         }
         else
         {
-            QString* searchpath = new QString("C:\\");
-            QDirIterator* iterator = new QDirIterator(*searchpath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
+            QString searchpath;
+
+            if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
+                searchpath = "C:\\";
+            else if((QSysInfo::kernelType() == "linux") && (QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Linux
+                searchpath = "/";
+
+            QDirIterator* iterator = new QDirIterator(searchpath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
             while(iterator->hasNext())
             {
                 iterator->next();
@@ -188,7 +203,6 @@ QString SubTools::getInterpreterPath()
                     break;
                 }
             }
-            delete searchpath;
             delete iterator;
             delete autoInterpreter;
         }
