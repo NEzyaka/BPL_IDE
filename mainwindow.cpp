@@ -433,7 +433,7 @@ void MainWindow::interpret() //interpretation
             QString bufPath = interpreterPath;
 
             if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
-                arg = bufPath.append(fileName);
+                arg = bufPath.append(" " + fileName);
             else if(QSysInfo::kernelType() == "linux") //if current platform is Linux
                 arg = "xterm -T \"Turnip Runner\" -e " + bufPath + " " + fileName;
             else if((QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Macintosh
