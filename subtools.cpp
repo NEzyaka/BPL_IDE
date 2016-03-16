@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QIcon>
 #include <QSysInfo>
+#include <QDebug>
 
 SubTools::SubTools()
 {
@@ -130,6 +131,7 @@ QString SubTools::getLanguage()
 
 QString SubTools::getInterpreterPath()
 {
+
     QFile* interpreterPathFromFile = new QFile("configs/interpreterConfig.config");
     QString *interpreterpath = new QString (readFromFile("configs/interpreterConfig.config"));
     QString interpreterPath;
@@ -174,14 +176,24 @@ QString SubTools::getInterpreterPath()
 
             if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
                 searchpath = "C:\\";
-            else if((QSysInfo::kernelType() == "linux") && (QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Linux
+            else if((QSysInfo::kernelType() == "linux") || (QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Linux
                 searchpath = "/";
 
             QDirIterator* iterator = new QDirIterator(searchpath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
             while(iterator->hasNext())
             {
                 iterator->next();
-                if(iterator->fileInfo().absoluteFilePath().contains("Turnip-Runner.exe", Qt::CaseInsensitive))
+
+                bool condition;
+
+                if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
+                    condition = iterator->fileInfo().absoluteFilePath().contains("Turnip-Runner.exe", Qt::CaseInsensitive);
+                else if(QSysInfo::kernelType() == "linux") //if current platform is Linux
+                    condition = iterator->fileInfo().absoluteFilePath().contains("Turnip-Runner.run", Qt::CaseInsensitive);
+                else if((QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Macintosh
+                { /*Here will be Macintosh executable file format*/ }
+
+                if(condition)
                 {
                     QMessageBox* autoDetectBox = new QMessageBox;
                     autoDetectBox->setText(tr("<b>Turnip Editor automatically found Turnip Runner<br> in ") + QString(iterator->fileInfo().absolutePath() + "</b>"));
