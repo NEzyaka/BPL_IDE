@@ -33,12 +33,12 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     QStringList operatorPatterns;
 
     QFile* operators = new QFile("configs/highlight/operators.config");
-    if(operators->open(QIODevice::ReadOnly |QIODevice::Text))
+    if(operators->open(QIODevice::ReadOnly | QIODevice::Text))
     {
         while(!operators->atEnd())
         {
             QString str = operators->readLine();
-            operatorPatterns << str.remove(str.length() - 1, 1);
+            operatorPatterns << "\\b" + str.remove(str.length() - 1, 1) + "\\b";
         }
     }
     delete operators;
@@ -68,12 +68,12 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     QStringList variablePatterns;
 
     QFile* dataTypes = new QFile("configs/highlight/dataTypes.config");
-    if(dataTypes->open(QIODevice::ReadOnly |QIODevice::Text))
+    if(dataTypes->open(QIODevice::ReadOnly | QIODevice::Text))
     {
         while(!dataTypes->atEnd())
         {
             QString str = dataTypes->readLine();
-            variablePatterns << str.remove(str.length() - 1, 1);
+            variablePatterns << "\\b" + str.remove(str.length() - 1, 1) + "\\b";
         }
     }
     delete dataTypes;
@@ -103,13 +103,16 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     valueFormat.setFontItalic(true);
     QStringList valuePatterns;
 
+    for(int i = 0; i < 10; i++)
+        valuePatterns << "\\b" + QString::number(i) + "\\b";
+
     QFile* values = new QFile("configs/highlight/values.config");
-    if(values->open(QIODevice::ReadOnly |QIODevice::Text))
+    if(values->open(QIODevice::ReadOnly | QIODevice::Text))
     {
         while(!values->atEnd())
         {
             QString str = values->readLine();
-            valuePatterns << str.remove(str.length() - 1, 1);
+            valuePatterns << "\\b" + str.remove(str.length() - 1, 1) + "\\b";
         }
     }
     delete values;
@@ -127,12 +130,12 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     QStringList conditionsPatterns;
 
     QFile* conditions = new QFile("configs/highlight/conditions.config");
-    if(conditions->open(QIODevice::ReadOnly |QIODevice::Text))
+    if(conditions->open(QIODevice::ReadOnly | QIODevice::Text))
     {
         while(!conditions->atEnd())
         {
             QString str = conditions->readLine();
-            conditionsPatterns << str.remove(str.length() - 1, 1);
+            conditionsPatterns << "\\b" + str.remove(str.length() - 1, 1) + "\\b";
         }
     }
     delete conditions;
@@ -150,12 +153,12 @@ Highlighter::Highlighter(QTextDocument* parent) : QSyntaxHighlighter(parent) //c
     QStringList blocksPatterns;
 
     QFile* blocks = new QFile("configs/highlight/blocks.config");
-    if(blocks->open(QIODevice::ReadOnly |QIODevice::Text))
+    if(blocks->open(QIODevice::ReadOnly | QIODevice::Text))
     {
         while(!blocks->atEnd())
         {
             QString str = blocks->readLine();
-            blocksPatterns << str.remove(str.length() - 1, 1);
+            blocksPatterns << "\\b" + str.remove(str.length() - 1, 1) + "\\b";
         }
     }
     delete blocks;

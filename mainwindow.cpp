@@ -324,7 +324,10 @@ void MainWindow::save() //save file
         tools->writeToFile(fileName, editor->toPlainText());
 
         if(tools->fileSaved(fileName, editor->toPlainText()))
+        {
             tools->writeSessionLog(fileName + " was successfully saved");
+            this->setWindowTitle(fileName + " - Turnip Editor 16.03 Preview");
+        }
         else
         {
             QMessageBox::critical(this, "Turnip Editor", tr("File cannot be saved!"));
@@ -342,7 +345,10 @@ void MainWindow::saveAs() //special saving of file
         tools->writeToFile(fileName, editor->toPlainText());
 
         if(tools->fileSaved(fileName, editor->toPlainText()))
+        {
             tools->writeSessionLog(fileName + " was successfully saved");
+            this->setWindowTitle(fileName + " - Turnip Editor 16.03 Preview");
+        }
         else
         {
             QMessageBox::critical(this, "Turnip Editor", tr("File cannot be saved!"));
@@ -555,6 +561,6 @@ void MainWindow::textChanged() //if text is changed
     QTextCursor* lineAndColumn = new QTextCursor(editor->textCursor());
     columnLine->setText(QString::number(lineAndColumn->blockNumber()+1) + ":" + QString::number(lineAndColumn->columnNumber()+1));
     delete lineAndColumn;
-    tools->fileSaved(fileName, editor->toPlainText()) ? this->setWindowTitle(fileName + "* - Turnip Editor 16.03 Preview") : this->setWindowTitle(fileName + " - Turnip Editor 16.03 Preview");
+    this->setWindowTitle(fileName + "* - Turnip Editor 16.03 Preview");
 }
 
