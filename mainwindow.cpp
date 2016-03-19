@@ -35,6 +35,7 @@
 #include <QTabWidget>
 #include <QTextCursor>
 #include <QSysInfo>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -183,11 +184,23 @@ void MainWindow::setupEditor() //setting up editor
     createMenu();
     createToolBar();
 
+    QWidget* buf = new QWidget(this);
+    QHBoxLayout* lay = new QHBoxLayout(buf);
+    //buf->setStyleSheet("background: black;");
+
     editor = new CodeEditor(this);
+    getter = new OutputGetter(this);
     editorSetuped = true;
     highlighter = new Highlighter(editor->document());
 
-    this->setCentralWidget(editor);
+    lay->addWidget(editor);
+    lay->addWidget(getter);
+    buf->setLayout(lay);
+
+    QPalette Pal;
+    Pal.setColor(QPalette::Background, QColor(43, 48, 59));
+    buf->setAutoFillBackground(true);
+    buf->setPalette(Pal);
 
     delete logoLabel; //clearing RAM after logo
     delete logoLayout;
@@ -200,6 +213,9 @@ void MainWindow::setupEditor() //setting up editor
     this->setStatusBar(statBar);
 
     setupTheme();
+
+    this->setCentralWidget(buf);
+    //buf->setStyleSheet("background: black;");
 
     connect(editor, SIGNAL(cursorPositionChanged()), this, SLOT(textChanged()));
 
@@ -218,6 +234,9 @@ void MainWindow::setupTheme() //theme
     widget->setupScheme();
 
     widget = toolBar;
+    widget->setupScheme();
+
+    widget = getter;
     widget->setupScheme();
 
     statBar->setStyleSheet("QStatusBar { background: rgb(43, 48, 59); }"
@@ -435,19 +454,31 @@ void MainWindow::interpret() //interpretation
     {
         if(!interpreterPath.isEmpty())
         {
-            QString arg;
+            /*QString arg;
             QString bufPath = interpreterPath;
 
-            if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
-                arg = bufPath.append(" " + fileName);
-            else if(QSysInfo::kernelType() == "linux") //if current platform is Linux
-                arg = "xterm -T \"Turnip Runner\" -e " + bufPath + " " + fileName;
-            else if((QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Macintosh
-            { /*Here will be Macintosh instructions*/ }
-            else //if current platform isn't Windows, Linux or Macintosh
-                QMessageBox::information(this, "Turnip Editor", tr("Sorry, but this platform doesn't supported!"));
+#if defined(Q_OS_WIN) //if current platform is Windows
+            arg = bufPath.append(" " + fileName);
+#elif defined(Q_OS_LINUX)
+            arg = "xterm -T \"Turnip Runner\" -e " + bufPath + " " + fileName; //if current platform is Linux
+#elif defined(Q_OS_MAC) //if current platform is Macintosh
 
-            system(arg.toStdString().c_str());
+#else
+            QMessageBox::information(this, "Turnip Editor", tr("Sorry, but this platform doesn't supported!"));
+#endif*/
+
+            QProcess process;
+            process.start(interpreterPath, QStringList() << fileName << "-IDE");
+            if(!process.waitForStarted())
+                return;
+
+             if(!process.waitForFinished())
+                 return;
+
+             QByteArray output = process.readAll();
+             getter->append(output);
+
+            //system(arg.toStdString().c_str());
 
             tools->writeSessionLog(fileName + " was successfully interpreted");
         }

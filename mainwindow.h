@@ -41,6 +41,7 @@
 #include "codeeditor.h"
 #include "highlighter.h"
 #include "subtools.h"
+#include "outputgetter.h"
 
 class MainWindow : public QMainWindow
 {
@@ -62,6 +63,7 @@ private:
     ToolBar* toolBar;
     QLabel* columnLine;
     QStatusBar* statBar;
+    OutputGetter* getter;
 
     void createMenu();
     void createStartMenu();

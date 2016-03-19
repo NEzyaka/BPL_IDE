@@ -21,16 +21,34 @@
 **
 ****************************************************************************/
 
-#ifndef WIDGET_H
-#define WIDGET_H
+#ifndef OUTPUTGETTER_H
+#define OUTPUTGETTER_H
 
-class Widget
+#include <QWidget>
+#include <QPlainTextEdit>
+#include <QLayout>
+#include <QLineEdit>
+
+#include "widget.h"
+
+class OutputGetter : public QWidget, public Widget
 {
+    Q_OBJECT
 public:
-    virtual void retranslateStrings() = 0;
-    virtual void setupScheme() = 0;
-protected:
-    virtual void createActions() = 0;
+    OutputGetter(QWidget *parent = 0);
+    void setupScheme();
+    void retranslateStrings() {}
+    void append(QString line);
+private:
+    void createActions() {}
+    QPlainTextEdit* viewer;
+    QLineEdit* writer;
+    QVBoxLayout* lay;
+    void setupViewer();
+    void setupViewerScheme();
+    void setupGetter();
+    void setupGetterScheme();
+    void setupFont();
 };
 
-#endif // WIDGET_H
+#endif // OUTPUTGETTER_H
