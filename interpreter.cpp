@@ -21,43 +21,32 @@
 **
 ****************************************************************************/
 
-#ifndef OUTPUTGETTER_H
-#define OUTPUTGETTER_H
+#include "interpreter.h"
 
-#include <QWidget>
-#include <QPlainTextEdit>
-#include <QLayout>
-#include <QLineEdit>
-#include <QPushButton>
-
-#include "widget.h"
-
-class OutputGetter : public QWidget, public Widget
+void Interpreter::run()
 {
-    Q_OBJECT
-public:
-    OutputGetter(QWidget *parent = 0);
-    void setupScheme();
-    void retranslateStrings();
-    void append(QString line);
-    QString getCommand() { return edit->text(); }
-private:
-    void createActions() {}
-    QPlainTextEdit* viewer;
-    QLineEdit* edit;
-    QWidget* writer;
-    QPushButton* btn;
-    QVBoxLayout* lay;
-    QHBoxLayout* writerLay;
-    void setupViewer();
-    void setupViewerScheme();
-    void setupGetter();
-    void setupGetterScheme();
-    void setupButton();
-    void setupButtonScheme();
-    void setupFont();
-signals:
-    void buttonClicked();
-};
+    QString bufPath = path;
 
-#endif // OUTPUTGETTER_H
+    runner.start(bufPath, arguments, QProcess::ReadWrite); //start interpreter
+
+    if(!runner.waitForStarted())
+        return;
+
+    if(!runner.waitForFinished())
+         return;
+
+    viewer->append(QString::fromLocal8Bit(runner.readAll()));
+    //connect(&runner, SIGNAL(readyRead()), this, SLOT(showOutput()));
+}
+
+void Interpreter::enter() //insert data
+{
+    runner.write(viewer->getCommand().toLocal8Bit() + "\n");
+    runner.waitForBytesWritten(100);
+    runner.closeWriteChannel();
+}
+
+void Interpreter::showOutput()
+{
+    viewer->append(QString::fromLocal8Bit(runner.readAll()));
+}

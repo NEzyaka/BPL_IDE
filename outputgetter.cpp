@@ -28,7 +28,13 @@ OutputGetter::OutputGetter(QWidget *parent) : QWidget(parent)
 {
     setupViewer();
     setupGetter();
-    //setupScheme();
+    setupButton();
+
+    writerLay = new QHBoxLayout(this);
+    writerLay->addWidget(edit);
+    writerLay->addWidget(btn);
+    writer = new QWidget(this);
+    writer->setLayout(writerLay);
 
     lay = new QVBoxLayout(this);
     lay->addWidget(viewer);
@@ -40,7 +46,13 @@ void OutputGetter::setupScheme()
 {
     setupViewerScheme();
     setupGetterScheme();
+    setupButtonScheme();
     setupFont();
+}
+
+void OutputGetter::retranslateStrings()
+{
+    btn->setText(tr("Enter"));
 }
 
 void OutputGetter::setupViewer()
@@ -61,12 +73,25 @@ void OutputGetter::setupViewerScheme()
 
 void OutputGetter::setupGetter()
 {
-    writer = new QLineEdit(this);
+    edit = new QLineEdit(this);
 }
 
 void OutputGetter::setupGetterScheme()
 {
-    writer->setStyleSheet("QLineEdit { background: rgb(43, 48, 59); color: rgb(192, 197, 206); border: 1px solid; border-color: rgb(192, 197, 206); border-radius: 3px; padding: 2px; selection-background-color: rgb(192, 197, 206); selection-color: rgb(43, 48, 49) }");
+    edit->setStyleSheet("QLineEdit { background: rgb(43, 48, 59); color: rgb(192, 197, 206); border-bottom: 1px solid; border-color: rgb(192, 197, 206); border-radius: 0px; padding: 2px; selection-background-color: rgb(192, 197, 206); selection-color: rgb(43, 48, 49) }");
+}
+
+void OutputGetter::setupButton()
+{
+    btn = new QPushButton(this);
+    btn->setText(tr("Enter"));
+    connect(btn, SIGNAL(clicked(bool)), this, SIGNAL(buttonClicked()));
+}
+
+void OutputGetter::setupButtonScheme()
+{
+    btn->setStyleSheet("QPushButton { background: rgb(43, 48, 59); color: rgb(192, 197, 206); border: 1px solid; border-color: rgb(192, 197, 206); border-radius: 3px; padding: 3px 10px 3px 10px; }"
+                       "QPushButton:pressed { background: rgb(192, 197, 206); color: rgb(43, 48, 59); border: none; }");
 }
 
 void OutputGetter::append(QString line)
@@ -81,6 +106,7 @@ void OutputGetter::setupFont()
     font.setFixedPitch(true);
     font.setPointSize(13);
     viewer->setFont(font);
-    writer->setFont(font);
+    edit->setFont(font);
+    btn->setFont(font);
 }
 

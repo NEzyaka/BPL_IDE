@@ -53,12 +53,12 @@
         <translation type="vanished">Do you want to use this interpreter?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="237"/>
+        <location filename="../mainwindow.cpp" line="254"/>
         <source>Error of reding configuration file, program may be crashed!</source>
         <translation>Error of reading configuration file, program may be crashed!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="276"/>
+        <location filename="../mainwindow.cpp" line="291"/>
         <source>Open</source>
         <translation>Open</translation>
     </message>
@@ -67,44 +67,44 @@
         <translation type="vanished">Turnip source code ( *.trnp *.txt *.ext)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="316"/>
-        <location filename="../mainwindow.cpp" line="332"/>
+        <location filename="../mainwindow.cpp" line="331"/>
         <location filename="../mainwindow.cpp" line="350"/>
+        <location filename="../mainwindow.cpp" line="371"/>
         <source>File cannot be saved!</source>
         <translation>File cannot be saved!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="340"/>
+        <location filename="../mainwindow.cpp" line="358"/>
         <source>Save As...</source>
         <translation>Save As...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="360"/>
+        <location filename="../mainwindow.cpp" line="381"/>
         <source>Do you want to exit?</source>
         <translation>Do you want to exit?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="361"/>
+        <location filename="../mainwindow.cpp" line="382"/>
         <source>Are you sure?</source>
         <translation>Are you sure?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="372"/>
+        <location filename="../mainwindow.cpp" line="393"/>
         <source>File </source>
         <translation>File </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="372"/>
+        <location filename="../mainwindow.cpp" line="393"/>
         <source> has been changed</source>
         <translation> has been changed</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="373"/>
+        <location filename="../mainwindow.cpp" line="394"/>
         <source>Do you want to save it?</source>
         <translation>Do you want to save it?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="443"/>
+        <location filename="../mainwindow.cpp" line="462"/>
         <source>Turnip Runner not found or is invalid. Please, choose the correct interpreter.</source>
         <translation>Turnip Runner not found or is invalid. Please, choose the correct interpreter.</translation>
     </message>
@@ -113,7 +113,7 @@
         <translation type="vanished">&lt;b&gt;Turnip Editor automatically found Turnip Runner&lt;br&gt; in </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="449"/>
+        <location filename="../mainwindow.cpp" line="468"/>
         <source>Error of saving file!</source>
         <translation>Error of saving file!</translation>
     </message>
@@ -122,88 +122,88 @@
         <translation type="vanished">Choose the interpreter</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="276"/>
+        <location filename="../mainwindow.cpp" line="291"/>
         <source>Turnip source code (*.txt *.trnp *.ext)</source>
         <translation>Turnip source code (*.txt *.trnp *.ext)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="294"/>
+        <location filename="../mainwindow.cpp" line="309"/>
         <source>New File...</source>
         <translation>New File...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="294"/>
-        <location filename="../mainwindow.cpp" line="340"/>
+        <location filename="../mainwindow.cpp" line="309"/>
+        <location filename="../mainwindow.cpp" line="358"/>
         <source>Turnip source code (*.txt);;Turnip source code (*.trnp);;Turnip source code (*.ext)</source>
         <translation>Turnip source code (*.txt);;Turnip source code (*.trnp);;Turnip source code (*.ext)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="479"/>
+        <location filename="../mainwindow.cpp" line="497"/>
         <source>Russian</source>
         <translation>Russian</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="486"/>
+        <location filename="../mainwindow.cpp" line="503"/>
         <source>English</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="493"/>
+        <location filename="../mainwindow.cpp" line="509"/>
         <source>German</source>
         <translation>German</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="506"/>
+        <location filename="../mainwindow.cpp" line="524"/>
         <source>Next generation of Turnip Editor.</source>
         <translation>Next generation of Turnip Editor.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="507"/>
+        <location filename="../mainwindow.cpp" line="525"/>
         <source>Simple IDE for simple programming language.</source>
         <translation>Simple IDE for simple programming language.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="508"/>
+        <location filename="../mainwindow.cpp" line="526"/>
         <source>Welcome to the Turnip Editor! Work with Turnip requiredn&apos;t some experience in programming, Turnip Editor is perfect for beginners. More information about Turnip and features of Turnip Editor you can look in Manual (F1).</source>
         <translation>Welcome to the Turnip Editor! Work with Turnip requiredn&apos;t some experience in programming, Turnip  is perfect for beginners. More information about Turnip and features of Turnip Editor you can look in Manual (F1).</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="512"/>
+        <location filename="../mainwindow.cpp" line="530"/>
         <source>Turnip Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</source>
         <translation>Turnip Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="516"/>
+        <location filename="../mainwindow.cpp" line="534"/>
         <source>Turnip Editor is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</source>
         <translation>Turnip Editor is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="520"/>
+        <location filename="../mainwindow.cpp" line="538"/>
         <source>You should have received a copy of the GNU General Public License along with Turnip Editor. If not, see &lt;a href = &apos;http://www.gnu.org/licenses/&apos;&gt;http://www.gnu.org/licenses/&lt;/a&gt;.</source>
         <translation>You should have received a copy of the GNU General Public License along with Turnip Editor. If not, see &lt;a href = &apos;http://www.gnu.org/licenses/&apos;&gt;http://www.gnu.org/licenses/&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="523"/>
+        <location filename="../mainwindow.cpp" line="541"/>
         <source>More information at </source>
         <translation>More information at </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="525"/>
+        <location filename="../mainwindow.cpp" line="543"/>
         <source>Found a bug or just have a question? Write </source>
         <translation>Found a bug or just have a question? Write </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="525"/>
+        <location filename="../mainwindow.cpp" line="543"/>
         <source>here</source>
         <translation>here</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="527"/>
+        <location filename="../mainwindow.cpp" line="545"/>
         <source>Nikita Mironov</source>
         <translation>Nikita Mironov</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="530"/>
+        <location filename="../mainwindow.cpp" line="548"/>
         <source>About</source>
         <translation>About</translation>
     </message>
@@ -387,6 +387,14 @@
     </message>
 </context>
 <context>
+    <name>OutputGetter</name>
+    <message>
+        <location filename="../outputgetter.cpp" line="82"/>
+        <source>Enter</source>
+        <translation>Enter</translation>
+    </message>
+</context>
+<context>
     <name>StartMenuBar</name>
     <message>
         <location filename="../startmenubar.cpp" line="98"/>
@@ -443,20 +451,20 @@
 <context>
     <name>SubTools</name>
     <message>
-        <location filename="../subtools.cpp" line="145"/>
-        <location filename="../subtools.cpp" line="172"/>
+        <location filename="../subtools.cpp" line="179"/>
+        <location filename="../subtools.cpp" line="222"/>
         <source>&lt;b&gt;Turnip Editor automatically found Turnip Runner&lt;br&gt; in </source>
         <translation>&lt;b&gt;Turnip Editor automatically found Turnip Runner&lt;br&gt; in </translation>
     </message>
     <message>
-        <location filename="../subtools.cpp" line="146"/>
-        <location filename="../subtools.cpp" line="173"/>
+        <location filename="../subtools.cpp" line="180"/>
+        <location filename="../subtools.cpp" line="223"/>
         <source>Do you want to use this interpreter?</source>
         <translation>Do you want to use this interpreter?</translation>
     </message>
     <message>
-        <location filename="../subtools.cpp" line="212"/>
-        <location filename="../subtools.cpp" line="213"/>
+        <location filename="../subtools.cpp" line="261"/>
+        <location filename="../subtools.cpp" line="262"/>
         <source>Choose the interpreter</source>
         <translation>Choose the interpreter</translation>
     </message>

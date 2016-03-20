@@ -36,6 +36,7 @@
 #include <QTextCursor>
 #include <QSysInfo>
 #include <QProcess>
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -151,6 +152,9 @@ void MainWindow::retranslateStrings() //retranslate strings when language change
 
         widget = toolBar;
         widget->retranslateStrings();
+
+        widget = getter;
+        widget->retranslateStrings();
     }
 }
 
@@ -186,7 +190,6 @@ void MainWindow::setupEditor() //setting up editor
 
     QWidget* buf = new QWidget(this);
     QHBoxLayout* lay = new QHBoxLayout(buf);
-    //buf->setStyleSheet("background: black;");
 
     editor = new CodeEditor(this);
     getter = new OutputGetter(this);
@@ -215,12 +218,10 @@ void MainWindow::setupEditor() //setting up editor
     setupTheme();
 
     this->setCentralWidget(buf);
-    //buf->setStyleSheet("background: black;");
 
     connect(editor, SIGNAL(cursorPositionChanged()), this, SLOT(textChanged()));
 
     tools->writeSessionLog("Editor was successfully setuped");
-
 }
 
 void MainWindow::setupTheme() //theme
@@ -454,31 +455,8 @@ void MainWindow::interpret() //interpretation
     {
         if(!interpreterPath.isEmpty())
         {
-            /*QString arg;
-            QString bufPath = interpreterPath;
-
-#if defined(Q_OS_WIN) //if current platform is Windows
-            arg = bufPath.append(" " + fileName);
-#elif defined(Q_OS_LINUX)
-            arg = "xterm -T \"Turnip Runner\" -e " + bufPath + " " + fileName; //if current platform is Linux
-#elif defined(Q_OS_MAC) //if current platform is Macintosh
-
-#else
-            QMessageBox::information(this, "Turnip Editor", tr("Sorry, but this platform doesn't supported!"));
-#endif*/
-
-            QProcess process;
-            process.start(interpreterPath, QStringList() << fileName << "-IDE");
-            if(!process.waitForStarted())
-                return;
-
-             if(!process.waitForFinished())
-                 return;
-
-             QByteArray output = process.readAll();
-             getter->append(output);
-
-            //system(arg.toStdString().c_str());
+            interpreter = new Interpreter(interpreterPath, QStringList() << fileName << "-IDE", getter);
+            interpreter->start();
 
             tools->writeSessionLog(fileName + " was successfully interpreted");
         }

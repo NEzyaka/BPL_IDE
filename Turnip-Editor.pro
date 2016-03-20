@@ -37,7 +37,8 @@ SOURCES      += main.cpp\
                 startmenubar.cpp \
                 manualviewer.cpp \
                 subtools.cpp \
-    outputgetter.cpp
+                outputgetter.cpp \
+                interpreter.cpp
 
 HEADERS      += mainwindow.h \
                 menubar.h \
@@ -48,7 +49,8 @@ HEADERS      += mainwindow.h \
                 manualviewer.h \
                 widget.h \
                 subtools.h \
-    outputgetter.h
+                outputgetter.h \
+                interpreter.h
 
 TRANSLATIONS += translations/russian.ts \
                 translations/english.ts \
@@ -62,4 +64,4 @@ RESOURCES    += icons.qrc \
 
 DISTFILES    += resources.rc
 
-QMAKE_LFLAGS_RELEASE += -static -static-libgcc
+#QMAKE_LFLAGS_RELEASE += -static -static-libgcc

@@ -21,43 +21,37 @@
 **
 ****************************************************************************/
 
-#ifndef OUTPUTGETTER_H
-#define OUTPUTGETTER_H
+#ifndef INTERPRETER_H
+#define INTERPRETER_H
 
-#include <QWidget>
-#include <QPlainTextEdit>
-#include <QLayout>
-#include <QLineEdit>
-#include <QPushButton>
+#include <QObject>
+#include <QThread>
+#include <QProcess>
 
-#include "widget.h"
+#include "outputgetter.h"
 
-class OutputGetter : public QWidget, public Widget
+
+class Interpreter : public QThread
 {
     Q_OBJECT
 public:
-    OutputGetter(QWidget *parent = 0);
-    void setupScheme();
-    void retranslateStrings();
-    void append(QString line);
-    QString getCommand() { return edit->text(); }
+    Interpreter(QString p, QStringList args, OutputGetter* v)
+    {
+        path = p;
+        arguments = args;
+        viewer = v;
+        connect(viewer, SIGNAL(buttonClicked()), this, SLOT(enter()));
+    }
+    void run();
 private:
-    void createActions() {}
-    QPlainTextEdit* viewer;
-    QLineEdit* edit;
-    QWidget* writer;
-    QPushButton* btn;
-    QVBoxLayout* lay;
-    QHBoxLayout* writerLay;
-    void setupViewer();
-    void setupViewerScheme();
-    void setupGetter();
-    void setupGetterScheme();
-    void setupButton();
-    void setupButtonScheme();
-    void setupFont();
-signals:
-    void buttonClicked();
+    QString path;
+    QStringList arguments;
+    OutputGetter* viewer;
+    QProcess runner;
+private slots:
+    void enter();
+    void showOutput();
 };
 
-#endif // OUTPUTGETTER_H
+
+#endif // INTERPRETER_H
