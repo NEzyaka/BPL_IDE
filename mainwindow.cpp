@@ -216,7 +216,6 @@ void MainWindow::setupEditor() //setting up editor
     this->setStatusBar(statBar);
 
     setupTheme();
-
     this->setCentralWidget(buf);
 
     connect(editor, SIGNAL(cursorPositionChanged()), this, SLOT(textChanged()));
