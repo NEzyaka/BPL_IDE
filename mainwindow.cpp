@@ -36,6 +36,8 @@
 #include <QTextCursor>
 #include <QSysInfo>
 
+#include "interpreter.h"
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     tools = new SubTools;
@@ -435,19 +437,11 @@ void MainWindow::interpret() //interpretation
     {
         if(!interpreterPath.isEmpty())
         {
-            QString arg;
-            QString bufPath = interpreterPath;
+            Interpreter* interpreter = new Interpreter(interpreterPath, QStringList() << fileName);
+            interpreter->start();
 
-            if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
-                arg = bufPath.append(" " + fileName);
-            else if(QSysInfo::kernelType() == "linux") //if current platform is Linux
-                arg = "xterm -T \"Turnip Runner\" -e " + bufPath + " " + fileName;
-            else if((QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Macintosh
-            { /*Here will be Macintosh instructions*/ }
-            else //if current platform isn't Windows, Linux or Macintosh
-                QMessageBox::information(this, "Turnip Editor", tr("Sorry, but this platform doesn't supported!"));
-
-            system(arg.toStdString().c_str());
+            if(interpreter->isFinished())
+                delete interpreter;
 
             tools->writeSessionLog(fileName + " was successfully interpreted");
         }
