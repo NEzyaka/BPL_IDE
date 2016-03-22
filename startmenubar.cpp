@@ -35,11 +35,11 @@ StartMenuBar::StartMenuBar(QWidget *parent) : QMenuBar(parent)
 void StartMenuBar::setupScheme()
 {
     this->setStyleSheet("QMenuBar { background-color: rgb(245, 246, 248); color: rgb(39, 50, 56); }"
-                        "QMenuBar::item { spacing: 5px; padding: 3px 5px; background: transparent; border-radius: 2px; }"
+                        "QMenuBar::item { spacing: 5px; padding: 4px 7px; background: transparent; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; }"
                         "QMenuBar::item:selected { background: rgb(225, 226, 228); }"
                         "QMenuBar::item:pressed { background: rgb(225, 226, 228); }"
                         "QMenu { background-color: rgb(245, 246, 248); border: rgb(245, 246, 248); margin: 3px; }"
-                        "QMenu::item { background-color: transparent; padding: 3px 5px 5px 25px; border-radius: 2px; }"
+                        "QMenu::item { background-color: transparent; padding: 3px 5px 5px 25px; border-radius: 3px; }"
                         "QMenu::item:selected { background-color: rgb(225, 226, 228); color: rgb(39, 50, 56); }"
                         "QMenu::separator { background: rgb(133, 143, 153); height: 1 px; }");
 }

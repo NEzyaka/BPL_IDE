@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setupLogo();
     createStartMenu();
 
-    this->setWindowTitle("Turnip Editor 16.03 Preview");
+    this->setWindowTitle("Turnip Editor 16.03");
     this->setWindowIcon(QIcon(":icons/logo.png"));
     this->setMinimumSize(480, 270);
     this->resize(800, 600);
@@ -283,7 +283,7 @@ void MainWindow::open() //open a file
         editor->setPlainText(tools->readFromFile(fileName));
         fileIsOpen = true;
 
-        this->setWindowTitle(fileName + " - Turnip Editor 16.03 Preview");
+        this->setWindowTitle(fileName + " - Turnip Editor 16.03");
 
         tools->writeSessionLog(fileName + " was successfully opened");
     }
@@ -307,7 +307,7 @@ void MainWindow::newFile() //create new file
             editor->setPlainText(tools->readFromFile(fileName));
             fileIsOpen = true;
 
-            this->setWindowTitle(fileName + " - Turnip Editor 16.03 Preview");
+            this->setWindowTitle(fileName + " - Turnip Editor 16.03");
 
             tools->writeSessionLog(fileName + " was successfully opened");
         }
@@ -328,7 +328,7 @@ void MainWindow::save() //save file
         if(tools->fileSaved(fileName, editor->toPlainText()))
         {
             tools->writeSessionLog(fileName + " was successfully saved");
-            this->setWindowTitle(fileName + " - Turnip Editor 16.03 Preview");
+            this->setWindowTitle(fileName + " - Turnip Editor 16.03");
         }
         else
         {
@@ -349,7 +349,7 @@ void MainWindow::saveAs() //special saving of file
         if(tools->fileSaved(fileName, editor->toPlainText()))
         {
             tools->writeSessionLog(fileName + " was successfully saved");
-            this->setWindowTitle(fileName + " - Turnip Editor 16.03 Preview");
+            this->setWindowTitle(fileName + " - Turnip Editor 16.03");
         }
         else
         {
@@ -508,7 +508,7 @@ void MainWindow::setLanguage(QAction *language) //setting up language
 void MainWindow::about()
 {
     QString aboutText;
-    aboutText.insert(0,  "<h1>Turnip Editor 16.03 Preview</h1>"
+    aboutText.insert(0,  "<h1>Turnip Editor 16.03</h1>"
                          "<h4>" + tr("Next generation of Turnip Editor.") + "</h4>" +
                      "<h3>" + tr("Simple IDE for simple programming language.") + "</h3>"
                                                                                   "<p>" + tr("Welcome to the Turnip Editor! Work with Turnip requiredn't some "
@@ -555,6 +555,6 @@ void MainWindow::textChanged() //if text is changed
     QTextCursor* lineAndColumn = new QTextCursor(editor->textCursor());
     columnLine->setText(QString::number(lineAndColumn->blockNumber()+1) + ":" + QString::number(lineAndColumn->columnNumber()+1));
     delete lineAndColumn;
-    this->setWindowTitle(fileName + "* - Turnip Editor 16.03 Preview");
+    this->setWindowTitle(fileName + "* - Turnip Editor 16.03");
 }
 
