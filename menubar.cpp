@@ -229,3 +229,23 @@ void MenuBar::retranslateStrings()
     langMenu->setTitle(tr("Language"));
     helpMenu->setTitle(tr("Help"));
 }
+
+void MenuBar::setUndoEnabled(bool state)
+{
+    undoAction->setEnabled(state);
+}
+
+void MenuBar::setRedoEnabled(bool state)
+{
+    redoAction->setEnabled(state);
+}
+
+void MenuBar::setCopyEnabled(bool state)
+{
+    copyAction->setEnabled(state);
+}
+
+void MenuBar::setCutEnabled(bool state)
+{
+    cutAction->setEnabled(state);
+}

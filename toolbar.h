@@ -51,6 +51,12 @@ signals:
     void comment();
     void interpret();
 
+public slots:
+    void setUndoEnabled(bool state);
+    void setRedoEnabled(bool state);
+    void setCopyEnabled(bool state);
+    void setCutEnabled(bool state);
+
 private:
     void createActions();
 

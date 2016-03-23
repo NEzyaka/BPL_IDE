@@ -57,7 +57,7 @@ void CodeEditor::comment() //commenting line
 {
     QTextCursor* tc = new QTextCursor(this->textCursor());
     tc->select(QTextCursor::WordUnderCursor);
-    tc->insertText("//" + tc->selectedText());
+    tc->insertText("@" + tc->selectedText());
     delete tc;
 }
 
@@ -86,7 +86,7 @@ void CodeEditor::setupFont()
     QFont font;
     font.setFamily("Consolas");
     font.setFixedPitch(true);
-    font.setPointSize(13);
+    font.setPointSize(14);
     this->setFont(font);
 }
 
@@ -144,6 +144,26 @@ void CodeEditor::retranslateStrings()
     contextMenu->addAction(redoAction);
     contextMenu->addSeparator();
     contextMenu->addAction(commentAction);
+}
+
+void CodeEditor::setUndoEnabled(bool state)
+{
+    undoAction->setEnabled(state);
+}
+
+void CodeEditor::setRedoEnabled(bool state)
+{
+    redoAction->setEnabled(state);
+}
+
+void CodeEditor::setCopyEnabled(bool state)
+{
+    copyAction->setEnabled(state);
+}
+
+void CodeEditor::setCutEnabled(bool state)
+{
+    cutAction->setEnabled(state);
 }
 
 void CodeEditor::contextMenuEvent(QContextMenuEvent *e) //setting up context menu

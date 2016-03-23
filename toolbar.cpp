@@ -89,6 +89,7 @@ void ToolBar::retranslateStrings()
     this->addAction(pasteAction);
     this->addAction(undoAction);
     this->addAction(redoAction);
+    this->addAction(commentAction);
     this->addSeparator();
     this->addAction(interpretAction);
 
@@ -103,4 +104,24 @@ void ToolBar::retranslateStrings()
     pasteAction->setText(tr("Paste"));
     interpretAction->setText(tr("Interpret"));
     commentAction->setText(tr("Comment a line"));
+}
+
+void ToolBar::setUndoEnabled(bool state)
+{
+    undoAction->setEnabled(state);
+}
+
+void ToolBar::setRedoEnabled(bool state)
+{
+    redoAction->setEnabled(state);
+}
+
+void ToolBar::setCopyEnabled(bool state)
+{
+    copyAction->setEnabled(state);
+}
+
+void ToolBar::setCutEnabled(bool state)
+{
+    cutAction->setEnabled(state);
 }

@@ -59,6 +59,12 @@ signals:
     void aboutQt();
     void manual();
 
+public slots:
+    void setUndoEnabled(bool state);
+    void setRedoEnabled(bool state);
+    void setCopyEnabled(bool state);
+    void setCutEnabled(bool state);
+
 private:
     void createActions();
     void createMenus();

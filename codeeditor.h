@@ -65,6 +65,12 @@ private slots:
     void updateLineNumberArea(const QRect &, int);
     void insertCompletion(const QString& completion);
 
+public slots:
+    void setUndoEnabled(bool state);
+    void setRedoEnabled(bool state);
+    void setCopyEnabled(bool state);
+    void setCutEnabled(bool state);
+
 private:
     QWidget* lineNumberArea;
 

@@ -132,6 +132,7 @@ void MainWindow::createToolBar() //setting up toolbar
     connect(toolBar, SIGNAL(cut()), SLOT(cut()));
     connect(toolBar, SIGNAL(copy()), SLOT(copy()));
     connect(toolBar, SIGNAL(paste()), SLOT(paste()));
+    connect(toolBar, SIGNAL(comment()), SLOT(comment()));
     connect(toolBar, SIGNAL(interpret()), SLOT(interpret()));
 }
 
@@ -205,6 +206,34 @@ void MainWindow::setupEditor() //setting up editor
 
     connect(editor, SIGNAL(cursorPositionChanged()), this, SLOT(textChanged()));
 
+    menuBar->setUndoEnabled(false);
+    toolBar->setUndoEnabled(false);
+    editor->setUndoEnabled(false);
+    connect(editor, SIGNAL(undoAvailable(bool)), menuBar, SLOT(setUndoEnabled(bool)));
+    connect(editor, SIGNAL(undoAvailable(bool)), toolBar, SLOT(setUndoEnabled(bool)));
+    connect(editor, SIGNAL(undoAvailable(bool)), editor, SLOT(setUndoEnabled(bool)));
+
+    menuBar->setRedoEnabled(false);
+    toolBar->setRedoEnabled(false);
+    editor->setRedoEnabled(false);
+    connect(editor, SIGNAL(redoAvailable(bool)), menuBar, SLOT(setRedoEnabled(bool)));
+    connect(editor, SIGNAL(redoAvailable(bool)), toolBar, SLOT(setRedoEnabled(bool)));
+    connect(editor, SIGNAL(redoAvailable(bool)), editor, SLOT(setRedoEnabled(bool)));
+
+    menuBar->setCopyEnabled(false);
+    toolBar->setCopyEnabled(false);
+    editor->setCopyEnabled(false);
+    connect(editor, SIGNAL(copyAvailable(bool)), menuBar, SLOT(setCopyEnabled(bool)));
+    connect(editor, SIGNAL(copyAvailable(bool)), toolBar, SLOT(setCopyEnabled(bool)));
+    connect(editor, SIGNAL(copyAvailable(bool)), editor, SLOT(setCopyEnabled(bool)));
+
+    menuBar->setCutEnabled(false);
+    toolBar->setCutEnabled(false);
+    editor->setCutEnabled(false);
+    connect(editor, SIGNAL(copyAvailable(bool)), menuBar, SLOT(setCutEnabled(bool)));
+    connect(editor, SIGNAL(copyAvailable(bool)), toolBar, SLOT(setCutEnabled(bool)));
+    connect(editor, SIGNAL(copyAvailable(bool)), editor, SLOT(setCutEnabled(bool)));
+
     tools->writeSessionLog("Editor was successfully setuped");
 
 }
@@ -232,7 +261,6 @@ void MainWindow::setupTheme() //theme
 void MainWindow::configsRead() //configs reading
 {
     setLanguage(tools->getLanguage());
-    //tools->retranslateStrings();
 
     if(!tools->configsExists())
     {
