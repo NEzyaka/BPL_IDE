@@ -82,9 +82,14 @@ void CodeEditor::setupScheme()
 
 void CodeEditor::setupFont()
 {
-    this->setLocale(QLocale::Russian);
     QFont font;
+
+#if defined(Q_OS_WIN)
     font.setFamily("Consolas");
+#elif defined(Q_OS_LINUX)
+    font.setFamily("Monospace");
+#endif
+
     font.setFixedPitch(true);
     font.setPointSize(14);
     this->setFont(font);

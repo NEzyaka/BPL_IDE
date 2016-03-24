@@ -27,14 +27,8 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QStatusBar>
-#include <QFileInfo>
-#include <QTime>
-#include <QDate>
 #include <QApplication>
-#include <QDirIterator>
-#include <QTabWidget>
 #include <QTextCursor>
-#include <QSysInfo>
 
 #include "interpreter.h"
 

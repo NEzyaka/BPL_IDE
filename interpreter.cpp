@@ -25,13 +25,13 @@
 
 void Interpreter::run()
 {
-    QString bufPath = path;
     QProcess* runner = new QProcess();
 
-#if defined(Q_OS_LINUX) //if current platform is Linux
-    bufPath.insert(0, "xterm -T \"Turnip Runner\" -e ");
+#if defined(Q_OS_WIN) //if current platform is Windows
+    runner->startDetached(bufPath, arguments);
+#elif defined(Q_OS_LINUX) //if current platform is Linux
+    runner->startDetached("xterm", QStringList()<< "-e" << path << arguments);
 #endif
 
-    runner->startDetached(bufPath, arguments); //start interpreter
     delete runner;
 }

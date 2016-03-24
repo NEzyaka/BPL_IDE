@@ -9,8 +9,6 @@
 #include <QDirIterator>
 #include <QFileDialog>
 #include <QIcon>
-#include <QSysInfo>
-#include <QDebug>
 
 SubTools::SubTools()
 {
@@ -174,10 +172,11 @@ QString SubTools::getInterpreterPath()
         {
             QString searchpath;
 
-            if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
-                searchpath = "C:\\";
-            else if((QSysInfo::kernelType() == "linux") || (QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Linux
-                searchpath = "/";
+#if defined(Q_OS_WIN) //if current platform is Windows
+            searchpath = "C:\\";
+#elif defined(Q_OS_UNIX) //if current platform is Linux
+            searchpath = "/";
+#endif
 
             QDirIterator* iterator = new QDirIterator(searchpath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
             while(iterator->hasNext())
@@ -186,13 +185,11 @@ QString SubTools::getInterpreterPath()
 
                 bool condition;
 
-                if((QSysInfo::kernelType() == "winnt") && (QSysInfo::windowsVersion() != QSysInfo::WV_None)) //if current platform is Windows
-                    condition = iterator->fileInfo().absoluteFilePath().contains("Turnip-Runner.exe", Qt::CaseInsensitive);
-                else if(QSysInfo::kernelType() == "linux") //if current platform is Linux
-                    condition = iterator->fileInfo().absoluteFilePath().contains("Turnip-Runner.run", Qt::CaseInsensitive);
-                else if((QSysInfo::kernelType() == "darwin") && (QSysInfo::macVersion() != QSysInfo::MV_None)) //if current platform is Macintosh
-                { /*Here will be Macintosh executable file format*/ }
-
+#if defined(Q_OS_WIN) //if current platform is Windows
+                condition = iterator->fileInfo().absoluteFilePath().contains("Turnip-Runner.exe", Qt::CaseInsensitive);
+#elif defined(Q_OS_LINUX)
+                condition = iterator->fileInfo().absoluteFilePath().contains("Turnip-Runner.run", Qt::CaseInsensitive);
+#endif
                 if(condition)
                 {
                     QMessageBox* autoDetectBox = new QMessageBox;
