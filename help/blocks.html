@@ -46,35 +46,35 @@
     <h4>В блоке находятся инструкции, которые будут выполнены тогда, когда этот блок будет вызван.</h4>
 
     <p>
-        <b>Блок вызывается с помощью оператора <font class = 'operator'>DOBLOCK</font></b>. <b>Например,"<font class = 'operator'>DOBLOCK</font></b> myFirstBlock".
+        <b>Блок вызывается с помощью оператора <font class = 'operator'>doblock</font></b>. <b>Например,"<font class = 'operator'>doblock</font></b> myFirstBlock".
     </p>
 
     <p>
-        <b>Выполнение программы всегда начинается с блока <font class = 'value'>MAIN</font></b>.
-        <b>Начало блока объявляется с помощью оператора <font class = 'operator'>BEGINBLOCK</font>, а конец - с помощью <font class = 'operator'>ENDBLOCK</font>.</b>
+        <b>Выполнение программы всегда начинается с блока <font class = 'value'>start</font></b>.
+        <b>Начало блока объявляется с помощью оператора <font class = 'operator'>beginblock</font>, а конец - с помощью <font class = 'operator'>endblock</font>.</b>
     </p>
 
     <p>
         <b>Давайте рассмотрим пример блока:</b><br>
-        <font class = 'operator'>BEGINBLOCK</font> <font class = 'value'>MAIN</font>
-        <br><font class = 'operator'>PRINT</font> <font class = 'string'>"Hello, world!"</font>
-        <br><font class = 'operator'>ENDBLOCK</font>
+        <font class = 'operator'>beginblock</font> <font class = 'value'>start</font>
+        <br><font class = 'operator'>print</font> <font class = 'string'>"Hello, world!"</font>
+        <br><font class = 'operator'>endblock</font>
     </p>
 
     <p>
         <b>Синтаксис:</b>
-      	<br><font class = 'operator'>BEGINBLOCK</font> имя блока
+      	<br><font class = 'operator'>beginblock</font> имя блока
       	<br>*содержиме блока*
-      	<br><font class = 'operator'>ENDBLOCK</font>
+      	<br><font class = 'operator'>endblock</font>
     </p>
 
     <p>
         <b>Также можно импортировать блоки из других файлов, это делает оператор <font class = 'operator'>IMPORT</font></b>.
-        <b>Например, "<font class = 'operator'>IMPORT</b></font> C:\test.txt".
+        <b>Например, "<font class = 'operator'>import</b></font> C:\test.txt".
     </p>
 
     <p>
-        <b>Ну и напоследок, КАЖДЫЙ оператор, кроме <font class = 'operator'>IMPORT</font> должен находиться в блоке, все операторы, кроме <font class = 'operator'>IMPORT</font>, которые находятся вне какого-либо блока, выполняться не будут.
+        <b>Ну и напоследок, КАЖДЫЙ оператор, кроме <font class = 'operator'>import</font> должен находиться в блоке, все операторы, кроме <font class = 'operator'>import</font>, которые находятся вне какого-либо блока, выполняться не будут.
     </p>
   </body>
 </html>

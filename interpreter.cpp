@@ -28,7 +28,7 @@ void Interpreter::run()
     QProcess* runner = new QProcess();
 
 #if defined(Q_OS_WIN) //if current platform is Windows
-    runner->startDetached(bufPath, arguments);
+    runner->startDetached(path, arguments);
 #elif defined(Q_OS_LINUX) //if current platform is Linux
     runner->startDetached("xterm", QStringList()<< "-e" << path << arguments);
 #endif
